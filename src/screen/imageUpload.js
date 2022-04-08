@@ -69,26 +69,25 @@ export default function ImageUpload({ navigation }) {
       })
       .then(function (buf) {
         return new File([buf], filename, { type: mimeType });
+      })
+      .catch(function (error) {
+        console.log(
+          "There has been a problem with your fetch operation: " + error
+        );
+        // ADD THIS THROW error
+        throw error;
       });
   };
-
-  // function encodeImageFileAsURL(element) {
-  //   var file = element.files[0];
-  //   var reader = new FileReader();
-  //   reader.onloadend = function () {
-  //     console.log("RESULT", reader.result);
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
 
   // ? TAKE PICTURE
   const __takePicture = async () => {
     if (!camera) return;
     const photo = await camera.takePictureAsync({ base64: true });
-    let tfimage = photo.base64;
-    const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
-    console.log("photo", dataPhoto);
-    const file = dataPhoto;
+    // let tfimage = photo.base64;
+    // const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
+    // console.log("photo", dataPhoto);
+    // const file = await urltoFile(dataPhoto, "a.jpeg");
+    // console.log("file", file);
     setPreviewVisible(true);
     setCapturedImage(photo);
   };
@@ -96,13 +95,6 @@ export default function ImageUpload({ navigation }) {
   // ? SAVE PHOTO
   const __savePhoto = async () => {
     setStartOver(true);
-    const form = new FormData();
-    form.append("image", {
-      name: "SampleFile.jpg",
-      uri: capturedImage.uri,
-      type: "image/jpg",
-    });
-    form.append("id", 114);
 
     try {
       // const reqObj = {
@@ -112,7 +104,6 @@ export default function ImageUpload({ navigation }) {
       // console.log("reqObj", reqObj);
       // return false;
       ///const response = await API.user_profile_img(formData);
-      console.log("response", response);
     } catch (error) {
       console.log("error", error);
     }

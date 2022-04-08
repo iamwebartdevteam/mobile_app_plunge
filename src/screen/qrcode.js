@@ -60,9 +60,7 @@ const Qrcode = ({ navigation }) => {
               >
                 <AntDesign name="scan1" size={30} color="#fff" />
               </Text>
-              {/* <Text style={notification.qrBtn}>
-                <Entypo name="link" size={30} color="#fff" />
-              </Text> */}
+
               <Text style={[notification.qrBtn, { marginRight: 0 }]}>
                 <FontAwesome name="share-square-o" size={30} color="#fff" />
               </Text>

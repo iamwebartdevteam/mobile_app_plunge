@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -72,59 +72,37 @@ export default function ImageUpload({ navigation }) {
       });
   };
 
+  // function encodeImageFileAsURL(element) {
+  //   var file = element.files[0];
+  //   var reader = new FileReader();
+  //   reader.onloadend = function () {
+  //     console.log("RESULT", reader.result);
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
+
   // ? TAKE PICTURE
   const __takePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync();
-    let imageFile = { uri: photo.uri };
-    let formdata = new FormData();
-    formdata.append("image", {
-      name: "image.jpg",
-      type: "image/jpeg",
-    });
-    formdata.append("id", 114);
-    try {
-      const response = await API.user_profile_img(formdata);
-      console.log("response", response);
-    } catch (error) {
-      console.log("error", error);
-    }
-
-    // const base = new Buffer(JSON.stringify(capturedImage.uri)).toString(
-    //   "base64"
-    // );
-    // const dataPhoto = `data:image/jpeg;base64,`;
-    // const base64 = dataPhoto + base;
-    // console.log("base64", base64);
+    const photo = await camera.takePictureAsync({ base64: true });
+    let tfimage = photo.base64;
+    const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
+    console.log("photo", dataPhoto);
+    const file = dataPhoto;
     setPreviewVisible(true);
     setCapturedImage(photo);
-  };
-
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
   };
 
   // ? SAVE PHOTO
   const __savePhoto = async () => {
     setStartOver(true);
-    const img = {
-      name: "a.jpeg",
-      type: "image/jpeg",
-      size: 2158,
-    };
-
-    const formData = new FormData();
-    formData.append("image", img);
-    formData.append("id", 114);
+    const form = new FormData();
+    form.append("image", {
+      name: "SampleFile.jpg",
+      uri: capturedImage.uri,
+      type: "image/jpg",
+    });
+    form.append("id", 114);
 
     try {
       // const reqObj = {
@@ -133,13 +111,11 @@ export default function ImageUpload({ navigation }) {
       // };
       // console.log("reqObj", reqObj);
       // return false;
-      const response = await API.user_profile_img(formData);
+      ///const response = await API.user_profile_img(formData);
       console.log("response", response);
     } catch (error) {
       console.log("error", error);
     }
-    // const file = await urltoFile(capturedImage.uri, "a.jpeg");
-    // console.log("file", file);
   };
 
   useEffect(() => {

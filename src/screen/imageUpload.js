@@ -13,8 +13,9 @@ import { Camera } from "expo-camera";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { dashBoard, imageUpload } from "../../assets/style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { userStatus } from "../utility/commonStaticData";
+import { lgoinKey, userStatus } from "../utility/commonStaticData";
 import { showMessage } from "react-native-flash-message";
+import * as API from "../Api/apiHalper";
 // import * as FaceDetector from "expo-face-detector";
 const tag = "[CAMERA]";
 export default function ImageUpload({ navigation }) {
@@ -80,8 +81,19 @@ export default function ImageUpload({ navigation }) {
   // ? SAVE PHOTO
   const __savePhoto = async () => {
     setStartOver(true);
-    const file = await urltoFile(capturedImage.uri, "a.jpeg");
-    console.log("file", file);
+    try {
+      const reqObj = {
+        image: capturedImage.uri,
+        id: await AsyncStorage.getItem(lgoinKey),
+      };
+      console.log("reqObj", reqObj);
+      const response = await API.user_profile_img(reqObj);
+      console.log("response", response);
+    } catch (error) {
+      console.log("error", error);
+    }
+    // const file = await urltoFile(capturedImage.uri, "a.jpeg");
+    // console.log("file", file);
   };
 
   useEffect(() => {

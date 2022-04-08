@@ -16,7 +16,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { lgoinKey, userStatus } from "../utility/commonStaticData";
 import { showMessage } from "react-native-flash-message";
 import * as API from "../Api/apiHalper";
-// import * as FaceDetector from "expo-face-detector";
+import logo from "../../assets/logo.png";
+import { Buffer } from "buffer";
+
 const tag = "[CAMERA]";
 export default function ImageUpload({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -24,6 +26,7 @@ export default function ImageUpload({ navigation }) {
   const [capturedImage, setCapturedImage] = useState(null);
   const [startOver, setStartOver] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [baseImg, setBaseImg] = useState("");
 
   const getDataSt = async () => {
     try {
@@ -58,15 +61,6 @@ export default function ImageUpload({ navigation }) {
     setStartOver(true);
   };
 
-  // ? TAKE PICTURE
-  const __takePicture = async () => {
-    if (!camera) return;
-    const photo = await camera.takePictureAsync();
-    console.log("photo", photo);
-    setPreviewVisible(true);
-    setCapturedImage(photo);
-  };
-
   const urltoFile = async (url, filename, mimeType) => {
     mimeType = mimeType || (url.match(/^data:([^;]+);/) || "")[1];
     return fetch(url)
@@ -78,16 +72,68 @@ export default function ImageUpload({ navigation }) {
       });
   };
 
+  // ? TAKE PICTURE
+  const __takePicture = async () => {
+    if (!camera) return;
+    const photo = await camera.takePictureAsync();
+    let imageFile = { uri: photo.uri };
+    let formdata = new FormData();
+    formdata.append("image", {
+      name: "image.jpg",
+      type: "image/jpeg",
+    });
+    formdata.append("id", 114);
+    try {
+      const response = await API.user_profile_img(formdata);
+      console.log("response", response);
+    } catch (error) {
+      console.log("error", error);
+    }
+
+    // const base = new Buffer(JSON.stringify(capturedImage.uri)).toString(
+    //   "base64"
+    // );
+    // const dataPhoto = `data:image/jpeg;base64,`;
+    // const base64 = dataPhoto + base;
+    // console.log("base64", base64);
+    setPreviewVisible(true);
+    setCapturedImage(photo);
+  };
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
   // ? SAVE PHOTO
   const __savePhoto = async () => {
     setStartOver(true);
+    const img = {
+      name: "a.jpeg",
+      type: "image/jpeg",
+      size: 2158,
+    };
+
+    const formData = new FormData();
+    formData.append("image", img);
+    formData.append("id", 114);
+
     try {
-      const reqObj = {
-        image: capturedImage.uri,
-        id: await AsyncStorage.getItem(lgoinKey),
-      };
-      console.log("reqObj", reqObj);
-      const response = await API.user_profile_img(reqObj);
+      // const reqObj = {
+      //   image: capturedImage.uri,
+      //   id: await AsyncStorage.getItem(lgoinKey),
+      // };
+      // console.log("reqObj", reqObj);
+      // return false;
+      const response = await API.user_profile_img(formData);
       console.log("response", response);
     } catch (error) {
       console.log("error", error);

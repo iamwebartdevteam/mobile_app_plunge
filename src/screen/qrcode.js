@@ -1,12 +1,31 @@
 import { View, Text, ScrollView, ImageBackground } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import QRCode from "react-native-qrcode-svg";
 import loginBg from "../../assets/subBg.png";
 import { dashBoard, notification, registration } from "../../assets/style";
 import logoicon from "../../assets/logo.png";
 import { AntDesign, FontAwesome, Entypo } from "@expo/vector-icons";
-
+import * as c from "../Api/constant";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { lgoinKey } from "../utility/commonStaticData";
 const Qrcode = ({ navigation }) => {
+  const [loginId, setLoginId] = useState("");
+
+  // ? login id
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem(lgoinKey);
+      console.log("loginId", value);
+      setLoginId(value);
+    } catch (e) {
+      // error reading value
+    }
+  };
+  const qrValue = c.PROFILE_URL + "/profile-complete/" + loginId;
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
@@ -30,7 +49,7 @@ const Qrcode = ({ navigation }) => {
             <QRCode
               size={250}
               logoSize={100}
-              value="https://medium.com/@mushtaque87/qrcode-generator-for-react-native-391ae401e275"
+              value={qrValue}
               // logo={logoicon}
               // logoBackgroundColor="transparent"
             />

@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "plunge",
+    "slug": "plunge",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/app_icon.png",
+    "splash": {
+      "image": "./assets/loader.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/app_icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.iambiswajitdev.plunge"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

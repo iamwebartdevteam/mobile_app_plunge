@@ -154,8 +154,30 @@ const CommonNav = ({ navigation }) => {
             }}
           />
         )}
+        <Drawer.Screen
+          name="STI Test History"
+          component={Testhistory}
+          options={{
+            drawerIcon: () => (
+              <Text style={dashBoard.menuIcon}>
+                <FontAwesome5 name="file-invoice" size={20} color="#fff" />
+              </Text>
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Plunge"
+          component={Qrcode}
+          options={{
+            drawerIcon: () => (
+              <Text style={dashBoard.menuIcon}>
+                <Ionicons name="ios-qr-code-outline" size={20} color="#fff" />
+              </Text>
+            ),
+          }}
+        />
 
-        {userProfileStatus >= "4" ? (
+        {/* {userProfileStatus >= "4" ? (
           <>
             <Drawer.Screen
               name="STI Test History"
@@ -184,7 +206,7 @@ const CommonNav = ({ navigation }) => {
               }}
             />
           </>
-        ) : undefined}
+        ) : undefined} */}
         <Drawer.Screen
           name="Notification"
           component={() => <Notification data={notifications} />}

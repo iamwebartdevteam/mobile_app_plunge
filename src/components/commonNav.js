@@ -28,6 +28,7 @@ import Notification from "../screen/notification";
 import * as API from "../Api/apiHalper";
 import { io } from "socket.io-client";
 import * as c from "../Api/constant";
+import Textshare from "../screen/textshare";
 const CommonNav = ({ navigation }) => {
   const [userProfileStatus, setUserProfileStatus] = useState("");
   const [notifications, setNotifications] = useState([]);

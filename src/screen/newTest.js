@@ -33,6 +33,7 @@ const NewTest = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [labName, setLabName] = useState([]);
   const [formData, setFormData] = useState(initialData);
+  const [disable, setDisable] = useState(false);
 
   // ?>>>>>>>> INPUT HANDALER =======>>>>>>
   const inputHandaler = (name, value) => {
@@ -48,6 +49,8 @@ const NewTest = ({ navigation }) => {
         date: moment(date).format("YYYY-MM-DD"),
       };
       console.log("reqObj", reqObj);
+      setDisable(true);
+      return false;
 
       const response = await API.send_request(reqObj);
       console.log("response", response);
@@ -162,10 +165,16 @@ const NewTest = ({ navigation }) => {
               </Picker>
             </View>
             <Button
-              style={[registration.button, editProfile.updateBtn]}
+              style={[
+                registration.button,
+                editProfile.updateBtn,
+                {
+                  backgroundColor: disable === false ? "#BD69EE" : "gray",
+                },
+              ]}
               icon={{ source: "arrow-right", direction: "ltr" }}
               mode="contained"
-              //disabled={!agree}
+              disabled={disable}
               onPress={submitButtonRequest}
             >
               submit

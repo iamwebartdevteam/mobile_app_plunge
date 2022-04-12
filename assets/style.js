@@ -271,7 +271,6 @@ export const dashBoard = StyleSheet.create({
     fontSize: 20,
   },
   dasboardScreen: {
-    height: hp("100%"),
     paddingHorizontal: 20,
     alignItems: "center",
     width: wp("100%"),
@@ -394,8 +393,7 @@ export const dashBoard = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 0,
-    //height: hp("80%"),
-    paddingTop: 30,
+    paddingTop: 20,
     marginBottom: 70,
   },
   subPackDetail: {
@@ -873,10 +871,9 @@ export const editProfile = StyleSheet.create({
   },
   formBgScreen: {
     paddingHorizontal: 0,
-    justifyContent: "flex-start",
+    justifyContent: "center",
     width: wp("90%"),
     backgroundColor: "#fff",
-    height: hp("90%"),
     paddingVertical: 15,
     shadowColor: "#000",
     shadowOffset: {

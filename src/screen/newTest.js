@@ -88,6 +88,9 @@ const NewTest = ({ navigation }) => {
       console.log("Error", error);
     }
   };
+
+  const validition = !formData.zipCode;
+
   useEffect(() => {
     labnameList();
   }, []);

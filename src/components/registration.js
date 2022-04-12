@@ -335,11 +335,6 @@ const RegistrationH = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
         >
           <Text style={registration.heading}>create account</Text>
-          {/* {allErrorMsg.map((item, index) => (
-            <Text key={index} style={registration.erroMeg}>
-              {item.message}
-            </Text>
-          ))} */}
           <View>
             <TextInput
               style={[registration.inputFeild]}
@@ -454,7 +449,7 @@ const RegistrationH = ({ navigation }) => {
                 registration.button,
                 {
                   backgroundColor: !disable && agree ? "#BD69EE" : "grey",
-                  paddingVertical: 5,
+                  paddingVertical: 2,
                 },
               ]}
               icon={{ source: "arrow-right", direction: "ltr" }}

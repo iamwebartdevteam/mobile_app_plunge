@@ -87,9 +87,9 @@ const MailOtp = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}
         >
           <Text style={registration.heading}>verification Code</Text>
-          {/* <Text style={registration.loginPra}>{route.params.message}</Text> */}
+          <Text style={registration.loginPra}>{route.params.message}</Text>
           <View style={loginScreen.userImg}>
-            <View style={loginScreen.icondiv}>
+            <View style={[loginScreen.icondiv, loginScreen.extraIcon]}>
               <FontAwesome5 name="user-check" size={50} color="#BD69EE" />
             </View>
           </View>
@@ -169,7 +169,12 @@ const MailOtp = ({ navigation, route }) => {
             />
           </View>
           <Button
-            style={registration.button}
+            style={[
+              registration.button,
+              {
+                paddingVertical: 0,
+              },
+            ]}
             icon={{ source: "arrow-right", direction: "ltr" }}
             mode="contained"
             onPress={eamilOtpSubmit}

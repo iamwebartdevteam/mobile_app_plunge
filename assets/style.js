@@ -213,6 +213,14 @@ export const loginScreen = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  extraIcon: {
+    backgroundColor: "#fff",
+    height: 100,
+    borderRadius: 100,
+    width: 100,
+    paddingHorizontal: 15,
+    marginBottom: 15,
+  },
   logoImg: {
     width: wp("30%"),
     height: hp("15%"),

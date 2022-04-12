@@ -30,6 +30,7 @@ const Payment = ({ navigation, route }) => {
   const [formData, setFormData] = useState([]);
   const [subsAmount, setSubsAmount] = useState("");
   const [disable, setDisable] = useState(false);
+  const amount = route.params.amount + ".00";
 
   // ?>>>>>>>> INPUT HANDALER =======>>>>>>
   const inputHandaler = (name, value) => {
@@ -101,19 +102,7 @@ const Payment = ({ navigation, route }) => {
         resizeMode="cover"
         style={registration.image}
       >
-        <View
-          style={[
-            dashBoard.subPackeg,
-            {
-              marginRight: 0,
-              marginTop: 0,
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              height: "80%",
-              paddingHorizontal: 0,
-            },
-          ]}
-        >
+        <View style={[dashBoard.editProfileFormBg]}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
@@ -123,7 +112,7 @@ const Payment = ({ navigation, route }) => {
                 style={editProfile.inputFeild}
                 placeholder="Amount"
                 editable={false}
-                value={JSON.stringify(route.params.amount)}
+                value={amount}
               />
               <TextInput
                 style={editProfile.inputFeild}

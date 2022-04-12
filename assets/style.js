@@ -395,6 +395,7 @@ export const dashBoard = StyleSheet.create({
     paddingHorizontal: 0,
     paddingTop: 20,
     marginBottom: 70,
+    flex: 1,
   },
   subPackDetail: {
     flexDirection: "column",

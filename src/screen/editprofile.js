@@ -80,14 +80,14 @@ const EditProfile = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [editMobileNo, setEditMobileNo] = useState(initEditMobile);
-  const [pinNumber, setPinNumber] = useState(initZip);
+  const [pinNumber, setPinNumber] = useState("");
 
   // ? EDIT EMAIL AND OTP VARIFICATION STATUS MAINTAINS
   const [isEmailSection, setIsEmailSection] = useState(0);
   const [isMobileSection, setIsMobileSection] = useState(0);
   const [mobileOtp, setMobileOtp] = useState(0);
 
-  console.log("zipCode", JSON.stringify(pinNumber));
+  console.log("zipCodedd", pinNumber.zipCode);
 
   // ?>>>>>>>>>>>> USER DETAILS BY ID >>>>>>>>>>>>>>
   const user_details_byid = async () => {
@@ -97,7 +97,9 @@ const EditProfile = ({ navigation }) => {
       };
       const response = await API.user_data_id(reqObj);
       console.log("Editresponse", response.data.data);
-      setPinNumber(formData.zipCode);
+      const pincode = JSON.stringify(response.data.data.zipCode);
+      console.log("pincode", pincode);
+      setPinNumber(pincode);
       setFormData(response.data.data);
       get_load(response.data.data.zipCode, response.data.data.countryName);
     } catch (error) {
@@ -109,6 +111,7 @@ const EditProfile = ({ navigation }) => {
   const inputHandaler = (name, value) => {
     if (name === "zipCode") {
       getState(value);
+      console.log("value", value);
     }
     setFormData({ ...formData, [name]: value });
     setPinNumber({ ...pinNumber, [name]: value });
@@ -131,7 +134,7 @@ const EditProfile = ({ navigation }) => {
         emailId: formData.emailId,
         dob: formData.dob,
         gender: formData.gender,
-        zipCode: formData.zipCode,
+        zipCode: pinNumber.zipCode,
         countryName: "US",
         stateName: yourstate,
         cityName: formData.cityName,
@@ -331,22 +334,12 @@ const EditProfile = ({ navigation }) => {
               </View>
 
               <TextInput
-                style={[editProfile.inputFeild, { position: "relative" }]}
+                style={[editProfile.inputFeild]}
                 placeholder="Zip Code"
                 onChangeText={(value) => inputHandaler("zipCode", value)}
-                value={pinNumber.zipCode}
+                value={pinNumber}
               />
-              {/* <Text
-                style={{
-                  position: "absolute",
-                  backgroundColor: "red",
-                  zIndex: 1,
-                  top: 30,
-                  fontSize: 30,
-                }}
-              >
-                {formData.zipCode}
-              </Text> */}
+
               <TextInput
                 style={editProfile.inputFeild}
                 placeholder="State Name"
@@ -372,7 +365,11 @@ const EditProfile = ({ navigation }) => {
                 </Picker>
               </View>
               <Button
-                style={[registration.button, editProfile.updateBtn]}
+                style={[
+                  registration.button,
+                  editProfile.updateBtn,
+                  { paddingVertical: 0 },
+                ]}
                 icon={{ source: "arrow-right", direction: "ltr" }}
                 mode="contained"
                 //disabled={!agree}

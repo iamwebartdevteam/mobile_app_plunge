@@ -38,7 +38,7 @@ const Login = ({ navigation, route }) => {
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const [disable, setDisable] = useState(false);
-  //console.log("route", route.params.logout);
+
   // ? Sign UP screen naviget
   const handalNaviget = (screenName) => {
     navigation.navigate(screenName);

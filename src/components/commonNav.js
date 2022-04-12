@@ -32,7 +32,7 @@ import * as c from "../Api/constant";
 const CommonNav = ({ navigation }) => {
   const [userProfileStatus, setUserProfileStatus] = useState("");
   const [notifications, setNotifications] = useState([]);
-  console.log("notifications", notifications.length);
+  console.log("notifications", notifications);
 
   console.log("userProfileStatusNav", userProfileStatus);
 

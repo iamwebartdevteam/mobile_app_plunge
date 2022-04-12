@@ -1037,10 +1037,11 @@ export const notification = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     backgroundColor: "#fff",
-    borderRadius: 5,
+    borderRadius: 8,
     marginBottom: 10,
     color: "#7b8ce6",
     fontWeight: "700",
+    width: wp("90%"),
   },
   imagesL: {
     width: 30,

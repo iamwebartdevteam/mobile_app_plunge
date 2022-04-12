@@ -116,7 +116,11 @@ const CustomDrawer = (props) => {
       <View style={dashBoard.logOutSec}>
         <Button
           style={dashBoard.logOut}
-          onPress={() => props.navigation.navigate("login")}
+          onPress={() =>
+            props.navigation.navigate("login", {
+              logout: true,
+            })
+          }
         >
           <AntDesign name="logout" size={20} color="#fff" />
         </Button>

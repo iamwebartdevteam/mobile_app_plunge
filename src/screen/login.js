@@ -32,12 +32,13 @@ const initialData = {
   password: "",
 };
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(initialData);
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
-
+  const [disable, setDisable] = useState(false);
+  //console.log("route", route.params.logout);
   // ? Sign UP screen naviget
   const handalNaviget = (screenName) => {
     navigation.navigate(screenName);
@@ -74,6 +75,7 @@ const Login = ({ navigation }) => {
 
   // ? LOGIN SUBMIT BUTTON
   const handleSubmit = async () => {
+    setDisable(true);
     setLoading(true);
     let flag = validate();
     if (!flag) {
@@ -86,9 +88,9 @@ const Login = ({ navigation }) => {
         password: formData.password,
       };
       console.log("reqObj", reqObj);
+
       const response = await API.user_login(reqObj);
       console.log("response", response.data.data);
-
       if (response.status === 200) {
         navigation.navigate("commonNav", {
           loginId: response.data.data.id,
@@ -122,6 +124,9 @@ const Login = ({ navigation }) => {
   };
 
   useEffect(() => {
+    // if (route.params.logout) {
+    //   console.log("hellllooooooo");
+    // }
     clearStorage();
   }, []);
 
@@ -237,6 +242,7 @@ const Login = ({ navigation }) => {
                   {errorPassword.message}
                 </Text>
               )}
+
               <TouchableOpacity onPress={handleSubmit}>
                 <LinearGradient
                   //style={newTestStyle.regisButton}

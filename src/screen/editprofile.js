@@ -9,6 +9,7 @@ import {
   Modal,
   Pressable,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import {
@@ -56,6 +57,7 @@ const initEditMobile = {
 };
 
 const EditProfile = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
   const pin1ref = useRef(null);
   const pin2ref = useRef(null);
   const pin3ref = useRef(null);
@@ -101,6 +103,7 @@ const EditProfile = ({ navigation }) => {
       console.log("pincode", pincode);
       setPinNumber(pincode);
       setFormData(response.data.data);
+      setLoading(response.data.data);
       get_load(response.data.data.zipCode, response.data.data.countryName);
     } catch (error) {
       console.log("error", error);
@@ -241,458 +244,475 @@ const EditProfile = ({ navigation }) => {
         resizeMode="cover"
         style={registration.image}
       >
-        <View
-          style={[
-            dashBoard.subPackeg,
-            {
-              marginRight: 0,
-              marginTop: 0,
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              height: "80%",
-              paddingHorizontal: 0,
-            },
-          ]}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          //style={{ backgroundColor: "#ccc" }}
         >
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-          >
-            <View style={[dashBoard.dasboardScreen, editProfile.formBgScreen]}>
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="First Name"
-                editable={false}
-                onChangeText={(value) => inputHandaler("fname", value)}
-                value={formData.fname}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Last Name"
-                editable={false}
-                onChangeText={(value) => inputHandaler("lname", value)}
-                value={formData.lname}
-              />
-              <TextInput
-                style={[editProfile.inputFeild, { marginBottom: 0 }]}
-                placeholder="User Name"
-                editable={false}
-                onChangeText={(value) => inputHandaler("userName", value)}
-                value={formData.userName}
-              />
-              <View style={editProfile.editIcon}>
-                <Pressable
-                  style={[styles.buttonOpen]}
-                  onPress={() => setModalVisible(true)}
+          <View style={[dashBoard.editProfileFormBg]}>
+            {loading === false ? (
+              <Text>
+                <ActivityIndicator size="large" color="red" />
+              </Text>
+            ) : (
+              <>
+                <View
+                  style={[dashBoard.dasboardScreen, editProfile.formBgScreen]}
                 >
-                  <Feather name="edit" size={15} color="#000" />
-                </Pressable>
-              </View>
-              <TextInput
-                style={[editProfile.inputFeild, { marginBottom: 0 }]}
-                placeholder="Mobile Number"
-                onChangeText={(value) => inputHandaler("mobileNo", value)}
-                value={formData.mobileNo}
-                keyboardType="numeric"
-              />
-              <View
-                style={editProfile.editIcon}
-                onPress={() => setEmailModalVisible(true)}
-              >
-                <Feather name="edit" size={15} color="#000" />
-              </View>
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Email Address"
-                onChangeText={(value) => inputHandaler("emailId", value)}
-                value={formData.emailId}
-              />
-              <View style={editProfile.inputFeild}>
-                <Picker
-                  selectedValue={formData.gender}
-                  style={{ height: 40, width: "100%" }}
-                  onValueChange={(itemValue) =>
-                    inputHandaler("gender", itemValue)
-                  }
-                >
-                  <Picker.Item label="Select gender" value="" />
-                  <Picker.Item label="Male" value="Male" />
-                  <Picker.Item label="Female" value="Female" />
-                  <Picker.Item label="X" value="X" />
-                </Picker>
-              </View>
-              <View style={editProfile.inputFeild}>
-                <Picker
-                  selectedValue={formData.gender}
-                  style={{ height: 40, width: "100%" }}
-                  onValueChange={(itemValue) =>
-                    inputHandaler("countryName", itemValue)
-                  }
-                >
-                  <Picker.Item label="United States" value="US" />
-                </Picker>
-              </View>
-
-              <TextInput
-                style={[editProfile.inputFeild]}
-                placeholder="Zip Code"
-                onChangeText={(value) => inputHandaler("zipCode", value)}
-                value={pinNumber}
-              />
-
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="State Name"
-                onChangeText={(value) => inputHandaler("stateName", value)}
-                value={yourstate}
-              />
-              <View style={editProfile.inputFeild}>
-                <Picker
-                  selectedValue={formData.cityName}
-                  style={{ height: 40, width: "100%" }}
-                  onValueChange={(itemValue) =>
-                    inputHandaler("cityName", itemValue)
-                  }
-                >
-                  <Picker.Item label="City name" value="" />
-                  {city.map((item, index) => (
-                    <Picker.Item
-                      key={index}
-                      label={item.cityName}
-                      value={item.cityName}
-                    />
-                  ))}
-                </Picker>
-              </View>
-              <Button
-                style={[
-                  registration.button,
-                  editProfile.updateBtn,
-                  { paddingVertical: 0 },
-                ]}
-                icon={{ source: "arrow-right", direction: "ltr" }}
-                mode="contained"
-                //disabled={!agree}
-                onPress={submitButton}
-              >
-                UPDATE PROFILE
-              </Button>
-            </View>
-            {/* MODAL FOR MOBILE NUMBER */}
-            <View style={[notification.centeredViewBack]}>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                  Alert.alert("Modal has been closed.");
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <View style={notification.centeredViewBack}>
-                  <View style={[notification.modalView]}>
-                    <Text
-                      onPress={() => setModalVisible(!modalVisible)}
-                      style={notification.reloadIcon}
+                  <TextInput
+                    style={editProfile.inputFeild}
+                    placeholder="First Name"
+                    editable={false}
+                    onChangeText={(value) => inputHandaler("fname", value)}
+                    value={formData.fname}
+                  />
+                  <TextInput
+                    style={editProfile.inputFeild}
+                    placeholder="Last Name"
+                    editable={false}
+                    onChangeText={(value) => inputHandaler("lname", value)}
+                    value={formData.lname}
+                  />
+                  <TextInput
+                    style={[editProfile.inputFeild, { marginBottom: 0 }]}
+                    placeholder="User Name"
+                    editable={false}
+                    onChangeText={(value) => inputHandaler("userName", value)}
+                    value={formData.userName}
+                  />
+                  <View style={editProfile.editIcon}>
+                    <Pressable
+                      style={[styles.buttonOpen]}
+                      onPress={() => setModalVisible(true)}
                     >
-                      <Entypo
-                        name="circle-with-cross"
-                        size={24}
-                        color="#fd248a"
-                      />
-                    </Text>
-                    {isMobileSection === 0 ? (
-                      <>
-                        <Text style={styles.modalText}>Edit Mobile Number</Text>
-                        <TextInput
-                          style={editProfile.inputFeild}
-                          placeholder="Mobile Number"
-                          onChangeText={(value) =>
-                            editMobileHandaler("mobileNo", value)
-                          }
-                          value={editMobileNo.mobileNo}
-                          keyboardType="numeric"
-                          maxLength={10}
-                        />
-                        <Button
-                          color="#fff"
-                          style={[registration.button, editProfile.updateBtn]}
-                          onPress={editMobileNumber}
-                        >
-                          Update
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Text style={styles.modalText}>
-                          Mobile Number verification code
-                        </Text>
-                        <View style={[loginScreen.otpFeildSection]}>
-                          <TextInput
-                            ref={pin1ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin1) => {
-                              setPin1(pin1);
-                              if (pin1 !== "") {
-                                pin2ref.current.focus();
-                              }
-                            }}
-                            value={pin1}
-                          />
-                          <TextInput
-                            ref={pin2ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin2) => {
-                              setPin2(pin2);
-                              if (pin2 !== "") {
-                                pin3ref.current.focus();
-                              }
-                            }}
-                            value={pin2}
-                          />
-                          <TextInput
-                            ref={pin3ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin3) => {
-                              setPin3(pin3);
-                              if (pin3 !== "") {
-                                pin4ref.current.focus();
-                              }
-                            }}
-                            value={pin3}
-                          />
-                          <TextInput
-                            ref={pin4ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin4) => {
-                              setPin4(pin4);
-                              if (pin4 !== "") {
-                                pin5ref.current.focus();
-                              }
-                            }}
-                            value={pin4}
-                          />
-                          <TextInput
-                            ref={pin5ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin5) => {
-                              setPin5(pin5);
-                              if (pin5 !== "") {
-                                pin6ref.current.focus();
-                              }
-                            }}
-                            value={pin5}
-                          />
-                          <TextInput
-                            ref={pin6ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin6) => setPin6(pin6)}
-                            value={pin6}
-                          />
-                        </View>
-                        <Text>{mobileOtp}</Text>
-                        <Button
-                          color="#fff"
-                          style={[registration.button, editProfile.updateBtn]}
-                          onPress={mobileNumberOtp}
-                        >
-                          Submit
-                        </Button>
-                      </>
-                    )}
+                      <Feather name="edit" size={15} color="#000" />
+                    </Pressable>
                   </View>
-                </View>
-              </Modal>
-            </View>
-            {/* MODAL FOR EMAIL UPDATE AND OTP VARIFICATION */}
-
-            <View style={[notification.centeredViewBack]}>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={emailModalVisible}
-                onRequestClose={() => {
-                  Alert.alert("Modal has been closed.");
-                  setEmailModalVisible(!emailModalVisible);
-                }}
-              >
-                <View style={notification.centeredViewBack}>
-                  <View style={[notification.modalView]}>
-                    <Text
-                      onPress={() => setEmailModalVisible(!emailModalVisible)}
-                      style={notification.reloadIcon}
+                  <TextInput
+                    style={[editProfile.inputFeild, { marginBottom: 0 }]}
+                    placeholder="Mobile Number"
+                    onChangeText={(value) => inputHandaler("mobileNo", value)}
+                    value={formData.mobileNo}
+                    keyboardType="numeric"
+                  />
+                  <View
+                    style={editProfile.editIcon}
+                    onPress={() => setEmailModalVisible(true)}
+                  >
+                    <Feather name="edit" size={15} color="#000" />
+                  </View>
+                  <TextInput
+                    style={editProfile.inputFeild}
+                    placeholder="Email Address"
+                    onChangeText={(value) => inputHandaler("emailId", value)}
+                    value={formData.emailId}
+                  />
+                  <View style={editProfile.inputFeild}>
+                    <Picker
+                      selectedValue={formData.gender}
+                      style={{ height: 40, width: "100%" }}
+                      onValueChange={(itemValue) =>
+                        inputHandaler("gender", itemValue)
+                      }
                     >
-                      <Entypo
-                        name="circle-with-cross"
-                        size={24}
-                        color="#fd248a"
-                      />
-                    </Text>
-                    {isMobileSection === 0 ? (
-                      <>
-                        <Text style={styles.modalText}>Edit Mobile Number</Text>
-                        <TextInput
-                          style={editProfile.inputFeild}
-                          placeholder="Mobile Number"
-                          onChangeText={(value) =>
-                            editMobileHandaler("mobileNo", value)
-                          }
-                          value={editMobileNo.mobileNo}
-                          keyboardType="numeric"
-                          maxLength={10}
-                        />
-                        <Button
-                          color="#fff"
-                          style={[registration.button, editProfile.updateBtn]}
-                          onPress={editMobileNumber}
-                        >
-                          Update
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Text style={styles.modalText}>
-                          Mobile Number verification code
-                        </Text>
-                        <View style={[loginScreen.otpFeildSection]}>
-                          <TextInput
-                            ref={pin1ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin1) => {
-                              setPin1(pin1);
-                              if (pin1 !== "") {
-                                pin2ref.current.focus();
-                              }
-                            }}
-                            value={pin1}
-                          />
-                          <TextInput
-                            ref={pin2ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin2) => {
-                              setPin2(pin2);
-                              if (pin2 !== "") {
-                                pin3ref.current.focus();
-                              }
-                            }}
-                            value={pin2}
-                          />
-                          <TextInput
-                            ref={pin3ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin3) => {
-                              setPin3(pin3);
-                              if (pin3 !== "") {
-                                pin4ref.current.focus();
-                              }
-                            }}
-                            value={pin3}
-                          />
-                          <TextInput
-                            ref={pin4ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin4) => {
-                              setPin4(pin4);
-                              if (pin4 !== "") {
-                                pin5ref.current.focus();
-                              }
-                            }}
-                            value={pin4}
-                          />
-                          <TextInput
-                            ref={pin5ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin5) => {
-                              setPin5(pin5);
-                              if (pin5 !== "") {
-                                pin6ref.current.focus();
-                              }
-                            }}
-                            value={pin5}
-                          />
-                          <TextInput
-                            ref={pin6ref}
-                            style={[
-                              registration.otpfeild,
-                              { borderWidth: 1, borderColor: "#dfe1e5" },
-                            ]}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            onChangeText={(pin6) => setPin6(pin6)}
-                            value={pin6}
-                          />
-                        </View>
-                        <Text>{mobileOtp}</Text>
-                        <Button
-                          color="#fff"
-                          style={[registration.button, editProfile.updateBtn]}
-                          onPress={mobileNumberOtp}
-                        >
-                          Submit
-                        </Button>
-                      </>
-                    )}
+                      <Picker.Item label="Select gender" value="" />
+                      <Picker.Item label="Male" value="Male" />
+                      <Picker.Item label="Female" value="Female" />
+                      <Picker.Item label="X" value="X" />
+                    </Picker>
                   </View>
+                  <View style={editProfile.inputFeild}>
+                    <Picker
+                      selectedValue={formData.gender}
+                      style={{ height: 40, width: "100%" }}
+                      onValueChange={(itemValue) =>
+                        inputHandaler("countryName", itemValue)
+                      }
+                    >
+                      <Picker.Item label="United States" value="US" />
+                    </Picker>
+                  </View>
+
+                  <TextInput
+                    style={[editProfile.inputFeild]}
+                    placeholder="Zip Code"
+                    onChangeText={(value) => inputHandaler("zipCode", value)}
+                    value={pinNumber}
+                  />
+
+                  <TextInput
+                    style={editProfile.inputFeild}
+                    placeholder="State Name"
+                    onChangeText={(value) => inputHandaler("stateName", value)}
+                    value={yourstate}
+                  />
+                  <View style={editProfile.inputFeild}>
+                    <Picker
+                      selectedValue={formData.cityName}
+                      style={{ height: 40, width: "100%" }}
+                      onValueChange={(itemValue) =>
+                        inputHandaler("cityName", itemValue)
+                      }
+                    >
+                      <Picker.Item label="City name" value="" />
+                      {city.map((item, index) => (
+                        <Picker.Item
+                          key={index}
+                          label={item.cityName}
+                          value={item.cityName}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
+                  <Button
+                    style={[
+                      registration.button,
+                      editProfile.updateBtn,
+                      { paddingVertical: 0 },
+                    ]}
+                    icon={{ source: "arrow-right", direction: "ltr" }}
+                    mode="contained"
+                    //disabled={!agree}
+                    onPress={submitButton}
+                  >
+                    UPDATE PROFILE
+                  </Button>
                 </View>
-              </Modal>
-            </View>
-          </ScrollView>
-        </View>
+                {/* MODAL FOR MOBILE NUMBER */}
+                <View style={[notification.centeredViewBack]}>
+                  <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                      Alert.alert("Modal has been closed.");
+                      setModalVisible(!modalVisible);
+                    }}
+                  >
+                    <View style={notification.centeredViewBack}>
+                      <View style={[notification.modalView]}>
+                        <Text
+                          onPress={() => setModalVisible(!modalVisible)}
+                          style={notification.reloadIcon}
+                        >
+                          <Entypo
+                            name="circle-with-cross"
+                            size={24}
+                            color="#fd248a"
+                          />
+                        </Text>
+                        {isMobileSection === 0 ? (
+                          <>
+                            <Text style={styles.modalText}>
+                              Edit Mobile Number
+                            </Text>
+                            <TextInput
+                              style={editProfile.inputFeild}
+                              placeholder="Mobile Number"
+                              onChangeText={(value) =>
+                                editMobileHandaler("mobileNo", value)
+                              }
+                              value={editMobileNo.mobileNo}
+                              keyboardType="numeric"
+                              maxLength={10}
+                            />
+                            <Button
+                              color="#fff"
+                              style={[
+                                registration.button,
+                                editProfile.updateBtn,
+                              ]}
+                              onPress={editMobileNumber}
+                            >
+                              Update
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Text style={styles.modalText}>
+                              Mobile Number verification code
+                            </Text>
+                            <View style={[loginScreen.otpFeildSection]}>
+                              <TextInput
+                                ref={pin1ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin1) => {
+                                  setPin1(pin1);
+                                  if (pin1 !== "") {
+                                    pin2ref.current.focus();
+                                  }
+                                }}
+                                value={pin1}
+                              />
+                              <TextInput
+                                ref={pin2ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin2) => {
+                                  setPin2(pin2);
+                                  if (pin2 !== "") {
+                                    pin3ref.current.focus();
+                                  }
+                                }}
+                                value={pin2}
+                              />
+                              <TextInput
+                                ref={pin3ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin3) => {
+                                  setPin3(pin3);
+                                  if (pin3 !== "") {
+                                    pin4ref.current.focus();
+                                  }
+                                }}
+                                value={pin3}
+                              />
+                              <TextInput
+                                ref={pin4ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin4) => {
+                                  setPin4(pin4);
+                                  if (pin4 !== "") {
+                                    pin5ref.current.focus();
+                                  }
+                                }}
+                                value={pin4}
+                              />
+                              <TextInput
+                                ref={pin5ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin5) => {
+                                  setPin5(pin5);
+                                  if (pin5 !== "") {
+                                    pin6ref.current.focus();
+                                  }
+                                }}
+                                value={pin5}
+                              />
+                              <TextInput
+                                ref={pin6ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin6) => setPin6(pin6)}
+                                value={pin6}
+                              />
+                            </View>
+                            <Text>{mobileOtp}</Text>
+                            <Button
+                              color="#fff"
+                              style={[
+                                registration.button,
+                                editProfile.updateBtn,
+                              ]}
+                              onPress={mobileNumberOtp}
+                            >
+                              Submit
+                            </Button>
+                          </>
+                        )}
+                      </View>
+                    </View>
+                  </Modal>
+                </View>
+                {/* MODAL FOR EMAIL UPDATE AND OTP VARIFICATION */}
+
+                <View style={[notification.centeredViewBack]}>
+                  <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={emailModalVisible}
+                    onRequestClose={() => {
+                      Alert.alert("Modal has been closed.");
+                      setEmailModalVisible(!emailModalVisible);
+                    }}
+                  >
+                    <View style={notification.centeredViewBack}>
+                      <View style={[notification.modalView]}>
+                        <Text
+                          onPress={() =>
+                            setEmailModalVisible(!emailModalVisible)
+                          }
+                          style={notification.reloadIcon}
+                        >
+                          <Entypo
+                            name="circle-with-cross"
+                            size={24}
+                            color="#fd248a"
+                          />
+                        </Text>
+                        {isMobileSection === 0 ? (
+                          <>
+                            <Text style={styles.modalText}>
+                              Edit Mobile Number
+                            </Text>
+                            <TextInput
+                              style={editProfile.inputFeild}
+                              placeholder="Mobile Number"
+                              onChangeText={(value) =>
+                                editMobileHandaler("mobileNo", value)
+                              }
+                              value={editMobileNo.mobileNo}
+                              keyboardType="numeric"
+                              maxLength={10}
+                            />
+                            <Button
+                              color="#fff"
+                              style={[
+                                registration.button,
+                                editProfile.updateBtn,
+                              ]}
+                              onPress={editMobileNumber}
+                            >
+                              Update
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Text style={styles.modalText}>
+                              Mobile Number verification code
+                            </Text>
+                            <View style={[loginScreen.otpFeildSection]}>
+                              <TextInput
+                                ref={pin1ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin1) => {
+                                  setPin1(pin1);
+                                  if (pin1 !== "") {
+                                    pin2ref.current.focus();
+                                  }
+                                }}
+                                value={pin1}
+                              />
+                              <TextInput
+                                ref={pin2ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin2) => {
+                                  setPin2(pin2);
+                                  if (pin2 !== "") {
+                                    pin3ref.current.focus();
+                                  }
+                                }}
+                                value={pin2}
+                              />
+                              <TextInput
+                                ref={pin3ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin3) => {
+                                  setPin3(pin3);
+                                  if (pin3 !== "") {
+                                    pin4ref.current.focus();
+                                  }
+                                }}
+                                value={pin3}
+                              />
+                              <TextInput
+                                ref={pin4ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin4) => {
+                                  setPin4(pin4);
+                                  if (pin4 !== "") {
+                                    pin5ref.current.focus();
+                                  }
+                                }}
+                                value={pin4}
+                              />
+                              <TextInput
+                                ref={pin5ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin5) => {
+                                  setPin5(pin5);
+                                  if (pin5 !== "") {
+                                    pin6ref.current.focus();
+                                  }
+                                }}
+                                value={pin5}
+                              />
+                              <TextInput
+                                ref={pin6ref}
+                                style={[
+                                  registration.otpfeild,
+                                  { borderWidth: 1, borderColor: "#dfe1e5" },
+                                ]}
+                                keyboardType="numeric"
+                                maxLength={1}
+                                onChangeText={(pin6) => setPin6(pin6)}
+                                value={pin6}
+                              />
+                            </View>
+                            <Text>{mobileOtp}</Text>
+                            <Button
+                              color="#fff"
+                              style={[
+                                registration.button,
+                                editProfile.updateBtn,
+                              ]}
+                              onPress={mobileNumberOtp}
+                            >
+                              Submit
+                            </Button>
+                          </>
+                        )}
+                      </View>
+                    </View>
+                  </Modal>
+                </View>
+              </>
+            )}
+          </View>
+        </ScrollView>
       </ImageBackground>
     </View>
   );

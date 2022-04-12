@@ -2,9 +2,10 @@ import {
   View,
   Text,
   ScrollView,
-  Picker,
+  TouchableOpacity,
   TextInput,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect } from "react";
 import { dashBoard, editProfile, registration } from "../../assets/style";
@@ -15,16 +16,20 @@ import * as API from "../Api/apiHalper";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { lgoinKey, userStatus } from "../utility/commonStaticData";
-import { AntDesign } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { CURRENCY } from "../Api/constant";
 import * as c from "../Api/constant";
 import { io } from "socket.io-client";
 
 const socket = io(c.URL);
 const Payment = ({ navigation, route }) => {
+  useEffect(() => {
+    subscription_plan();
+  }, []);
   console.log("route", route.params.planId);
   const [formData, setFormData] = useState([]);
   const [subsAmount, setSubsAmount] = useState("");
+  const [disable, setDisable] = useState(false);
 
   // ?>>>>>>>> INPUT HANDALER =======>>>>>>
   const inputHandaler = (name, value) => {
@@ -47,12 +52,13 @@ const Payment = ({ navigation, route }) => {
 
   // ? PAYMENT SUBMIT
   const submitButton = async () => {
+    setDisable(true);
     try {
       const reqObj = {
         userId: await AsyncStorage.getItem(lgoinKey),
         currency: CURRENCY,
         subscribeId: route.params.planId,
-        amount: subsAmount.amount,
+        amount: route.params.amount,
         details: {
           subtotal: "30.00",
           tax: "0.07",
@@ -88,10 +94,6 @@ const Payment = ({ navigation, route }) => {
     }
   };
 
-  useEffect(() => {
-    subscription_plan();
-  }, []);
-
   return (
     <View style={dashBoard.dasboardScreen}>
       <ImageBackground
@@ -121,7 +123,7 @@ const Payment = ({ navigation, route }) => {
                 style={editProfile.inputFeild}
                 placeholder="Amount"
                 editable={false}
-                value={JSON.stringify(subsAmount.amount)}
+                value={JSON.stringify(route.params.amount)}
               />
               <TextInput
                 style={editProfile.inputFeild}
@@ -171,8 +173,44 @@ const Payment = ({ navigation, route }) => {
                 onChangeText={(value) => inputHandaler("state", value)}
                 value={formData.state}
               />
+              <TouchableOpacity
+                style={[
+                  registration.button,
+                  editProfile.updateBtn,
+                  {
+                    backgroundColor: disable === false ? "#BD69EE" : "gray",
+                  },
+                ]}
+                disabled={disable}
+                onPress={submitButton}
+              >
+                {disable === false ? (
+                  <>
+                    <Entypo
+                      name="arrow-long-right"
+                      style={{ marginRight: 15 }}
+                      size={20}
+                      color="#fff"
+                    />
+                    <Text style={{ color: "#fff", fontWeight: "700" }}>
+                      Submit
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <ActivityIndicator
+                      size="small"
+                      color="#0000ff"
+                      style={{ marginRight: 15 }}
+                    />
+                    <Text style={{ fontWeight: "700", color: "#000" }}>
+                      Loading...
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
 
-              <Button
+              {/* <Button
                 style={[registration.button, editProfile.updateBtn]}
                 icon={{ source: "arrow-right", direction: "ltr" }}
                 mode="contained"
@@ -180,7 +218,7 @@ const Payment = ({ navigation, route }) => {
                 onPress={submitButton}
               >
                 SUBMIT
-              </Button>
+              </Button> */}
             </View>
           </ScrollView>
         </View>

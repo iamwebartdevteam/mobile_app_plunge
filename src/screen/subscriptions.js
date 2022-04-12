@@ -148,6 +148,7 @@ const Subscriptions = ({ navigation }) => {
                         onPress={() =>
                           navigation.navigate("payment", {
                             planId: element.item.id,
+                            amount: element.item.amount,
                           })
                         }
                       >

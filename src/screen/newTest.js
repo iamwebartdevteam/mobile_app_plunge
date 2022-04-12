@@ -5,6 +5,8 @@ import {
   TextInput,
   Picker,
   ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Button } from "react-native-paper";
@@ -22,7 +24,9 @@ import { lgoinKey, userStatus } from "../utility/commonStaticData";
 import moment from "moment";
 import { showMessage } from "react-native-flash-message";
 import * as c from "../Api/constant";
+import { Entypo } from "@expo/vector-icons";
 import { io } from "socket.io-client";
+
 const socket = io(c.URL);
 const initialData = {
   zipCode: "",
@@ -41,6 +45,7 @@ const NewTest = ({ navigation }) => {
   };
 
   const submitButtonRequest = async () => {
+    setDisable(true);
     try {
       const reqObj = {
         userId: await AsyncStorage.getItem(lgoinKey),
@@ -49,9 +54,6 @@ const NewTest = ({ navigation }) => {
         date: moment(date).format("YYYY-MM-DD"),
       };
       console.log("reqObj", reqObj);
-      setDisable(true);
-      return false;
-
       const response = await API.send_request(reqObj);
       console.log("response", response);
       if (response.status === 200) {
@@ -164,7 +166,7 @@ const NewTest = ({ navigation }) => {
                 ))}
               </Picker>
             </View>
-            <Button
+            <TouchableOpacity
               style={[
                 registration.button,
                 editProfile.updateBtn,
@@ -172,13 +174,34 @@ const NewTest = ({ navigation }) => {
                   backgroundColor: disable === false ? "#BD69EE" : "gray",
                 },
               ]}
-              icon={{ source: "arrow-right", direction: "ltr" }}
-              mode="contained"
               disabled={disable}
               onPress={submitButtonRequest}
             >
-              submit
-            </Button>
+              {disable === false ? (
+                <>
+                  <Entypo
+                    name="arrow-long-right"
+                    style={{ marginRight: 15 }}
+                    size={20}
+                    color="#fff"
+                  />
+                  <Text style={{ color: "#fff", fontWeight: "700" }}>
+                    Submit
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <ActivityIndicator
+                    size="small"
+                    color="#0000ff"
+                    style={{ marginRight: 15 }}
+                  />
+                  <Text style={{ fontWeight: "700", color: "#000" }}>
+                    Loading...
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </ImageBackground>

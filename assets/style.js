@@ -861,7 +861,7 @@ export const editProfile = StyleSheet.create({
   },
   updateBtn: {
     width: wp("80%"),
-    paddingVertical: 0,
+    paddingVertical: 10,
   },
   editIcon: {
     width: wp("80%"),

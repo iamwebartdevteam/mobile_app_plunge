@@ -32,14 +32,14 @@ export default function ImageUpload({ navigation }) {
     try {
       const value = await AsyncStorage.getItem(userStatus);
       console.log("value", value);
-      if (JSON.parse(value) === "0") {
-        navigation.navigate("editprofile");
-        showMessage({
-          message: "Please update your profile details",
-          type: "danger",
-          animationDuration: 1000,
-        });
-      }
+      // if (JSON.parse(value) === "0") {
+      //   navigation.navigate("editprofile");
+      //   showMessage({
+      //     message: "Please update your profile details",
+      //     type: "danger",
+      //     animationDuration: 1000,
+      //   });
+      // }
     } catch (e) {
       // error reading value
     }

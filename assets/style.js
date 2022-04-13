@@ -693,7 +693,7 @@ export const dashBoard = StyleSheet.create({
     position: "absolute",
     top: "30%",
     borderWidth: 4,
-    left: 100,
+    left: 120,
     borderColor: "#fff",
     width: wp("40%"),
     height: hp("25%"),

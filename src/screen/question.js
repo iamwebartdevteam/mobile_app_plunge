@@ -35,14 +35,14 @@ const Question = ({ navigation }) => {
     try {
       const value = await AsyncStorage.getItem(userStatus);
       console.log("svalue", value);
-      if (JSON.parse(value) === "0" || JSON.parse(value) === "1") {
-        navigation.navigate("subscriptions");
-        showMessage({
-          message: "Please update your profile details",
-          type: "danger",
-          animationDuration: 1000,
-        });
-      }
+      // if (JSON.parse(value) === "0" || JSON.parse(value) === "1") {
+      //   navigation.navigate("subscriptions");
+      //   showMessage({
+      //     message: "Please update your profile details",
+      //     type: "danger",
+      //     animationDuration: 1000,
+      //   });
+      // }
       const respons = await API.user_question();
       setUseQuestion(respons.data.data);
       setLoader(respons.data.data);

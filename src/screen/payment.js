@@ -102,7 +102,6 @@ const Payment = ({ navigation, route }) => {
         },
       };
       console.log("reqObj", reqObj);
-      return false;
       const response = await API.add_payment(reqObj);
       console.log("response", response);
       if (response.status === 200) {

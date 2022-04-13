@@ -39,11 +39,16 @@ const NewTest = ({ navigation }) => {
   const [formData, setFormData] = useState(initialData);
   const [disable, setDisable] = useState(false);
 
+  // ? >>>>>>>> INPUT VALIDATION
+  const [errorZipCode, setErrorZipCode] = useState("");
+  const [errorLabName, setErrorLabName] = useState("");
+
   // ?>>>>>>>> INPUT HANDALER =======>>>>>>
   const inputHandaler = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  // ? >>>>>>> NEW SEND REQUEST BTN =====>>>>>>>>>>
   const submitButtonRequest = async () => {
     setDisable(true);
     try {
@@ -54,6 +59,7 @@ const NewTest = ({ navigation }) => {
         date: moment(date).format("YYYY-MM-DD"),
       };
       console.log("reqObj", reqObj);
+      return false;
       const response = await API.send_request(reqObj);
       console.log("response", response);
       if (response.status === 200) {
@@ -89,7 +95,35 @@ const NewTest = ({ navigation }) => {
     }
   };
 
-  const validition = !formData.zipCode;
+  const validition = !formData.zipCode || !formData.laboratoryId || !date;
+
+  const disabledbtnRequst = () => {
+    if (!formData.zipCode) {
+      setErrorZipCode(
+        showMessage({
+          message: "Please enter your zipCode",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    } else if (!formData.laboratoryId) {
+      setErrorLabName(
+        showMessage({
+          message: "Please select your lab name",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    }
+    if (formData.zipCode || formData.laboratoryId) {
+    } else {
+      showMessage({
+        message: "Please enter your request details",
+        type: "danger",
+        animationDuration: 1000,
+      });
+    }
+  };
 
   useEffect(() => {
     labnameList();
@@ -169,42 +203,64 @@ const NewTest = ({ navigation }) => {
                 ))}
               </Picker>
             </View>
-            <TouchableOpacity
-              style={[
-                registration.button,
-                editProfile.updateBtn,
-                {
-                  backgroundColor: disable === false ? "#BD69EE" : "gray",
-                },
-              ]}
-              disabled={disable}
-              onPress={submitButtonRequest}
-            >
-              {disable === false ? (
-                <>
-                  <Entypo
-                    name="arrow-long-right"
-                    style={{ marginRight: 15 }}
-                    size={20}
-                    color="#fff"
-                  />
-                  <Text style={{ color: "#fff", fontWeight: "700" }}>
-                    Submit
-                  </Text>
-                </>
-              ) : (
-                <>
-                  <ActivityIndicator
-                    size="small"
-                    color="#0000ff"
-                    style={{ marginRight: 15 }}
-                  />
-                  <Text style={{ fontWeight: "700", color: "#000" }}>
-                    Loading...
-                  </Text>
-                </>
-              )}
-            </TouchableOpacity>
+
+            {validition ? (
+              <TouchableOpacity
+                onPress={disabledbtnRequst}
+                style={[
+                  registration.button,
+                  editProfile.updateBtn,
+                  {
+                    backgroundColor: "gray",
+                  },
+                ]}
+              >
+                <Entypo
+                  name="arrow-long-right"
+                  style={{ marginRight: 15 }}
+                  size={20}
+                  color="#fff"
+                />
+                <Text style={{ color: "#fff", fontWeight: "700" }}>Submit</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[
+                  registration.button,
+                  editProfile.updateBtn,
+                  {
+                    backgroundColor: disable === false ? "#BD69EE" : "gray",
+                  },
+                ]}
+                disabled={disable}
+                onPress={submitButtonRequest}
+              >
+                {disable === false ? (
+                  <>
+                    <Entypo
+                      name="arrow-long-right"
+                      style={{ marginRight: 15 }}
+                      size={20}
+                      color="#fff"
+                    />
+                    <Text style={{ color: "#fff", fontWeight: "700" }}>
+                      Submit
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <ActivityIndicator
+                      size="small"
+                      color="#0000ff"
+                      style={{ marginRight: 15 }}
+                    />
+                    <Text style={{ fontWeight: "700", color: "#000" }}>
+                      Loading...
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
       </ImageBackground>

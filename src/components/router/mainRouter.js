@@ -32,7 +32,7 @@ export default function MainRouter({ login }) {
     <View style={{ flex: 1 }}>
       <StatusBar backgroundColor="#9980e9" />
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="login">
+        <Stack.Navigator initialRouteName="mobileOtp">
           <Stack.Screen
             options={{ headerShown: false }}
             name="commonNav"

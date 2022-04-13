@@ -5,15 +5,17 @@ import {
   TextInput,
   Picker,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState, useRef } from "react";
 import { loginScreen, registration } from "../../assets/style";
 import loginBg from "../../assets/loginbg.png";
 import { Button } from "react-native-paper";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Entypo } from "@expo/vector-icons";
 import * as API from "../Api/apiHalper";
 import { lgoinId, lgoinKey } from "../utility/commonStaticData";
+import { showMessage } from "react-native-flash-message";
 
 const initialOtpData = {
   mobileNo: "",
@@ -61,24 +63,31 @@ const Mobilnumber = ({ navigation, route }) => {
 
   // ? MOBILE NUMBER SUBMIT
   const eamilOtpSubmit = async () => {
-    try {
-      const reqObj = {
-        id: route.params.loginId,
-        mobileNo: `+1${formData.mobileNo}`,
-      };
-      console.log("reqObj", reqObj);
-
-      const response = await API.user_mobile(reqObj);
-      console.log("response", response.data.otp);
-      if (response.status === 200) {
-        navigation.navigate("mobileOtp", {
-          message: response.data.msg,
-          otp: response.data.otp,
-          loginId: route.params.loginId,
-        });
+    if (formData.mobileNo.length < 10) {
+      showMessage({
+        message: "Please enter your 10 digit mobile number",
+        type: "danger",
+        animationDuration: 1000,
+      });
+    } else {
+      try {
+        const reqObj = {
+          id: route.params.loginId,
+          mobileNo: `+1${formData.mobileNo}`,
+        };
+        console.log("reqObj", reqObj);
+        const response = await API.user_mobile(reqObj);
+        console.log("response", response.data.otp);
+        if (response.status === 200) {
+          navigation.navigate("mobileOtp", {
+            message: response.data.msg,
+            otp: response.data.otp,
+            loginId: route.params.loginId,
+          });
+        }
+      } catch (error) {
+        console.log("Error", error);
       }
-    } catch (error) {
-      console.log("Error", error);
     }
   };
 
@@ -92,6 +101,18 @@ const Mobilnumber = ({ navigation, route }) => {
       }
     } catch (e) {
       // error reading value
+    }
+  };
+  // ? validation condition
+  const validation = !formData.mobileNo;
+
+  const disabledbtnNumber = () => {
+    if (!formData.mobileNo) {
+      showMessage({
+        message: "Please enter your mobile number",
+        type: "danger",
+        animationDuration: 1000,
+      });
     }
   };
 
@@ -115,7 +136,7 @@ const Mobilnumber = ({ navigation, route }) => {
             Enter your Mobile Number
           </Text>
           <View style={loginScreen.userImg}>
-            <View style={loginScreen.icondiv}>
+            <View style={[loginScreen.icondiv, loginScreen.extraIcon]}>
               <FontAwesome5 name="mobile-alt" size={50} color="#BD69EE" />
             </View>
           </View>
@@ -134,14 +155,54 @@ const Mobilnumber = ({ navigation, route }) => {
               value={formData.mobileNo}
             />
           </View>
-          <Button
-            style={registration.button}
-            icon={{ source: "arrow-right", direction: "ltr" }}
-            mode="contained"
-            onPress={eamilOtpSubmit}
-          >
-            Submit
-          </Button>
+          {validation ? (
+            <TouchableOpacity
+              onPress={disabledbtnNumber}
+              style={[
+                registration.button,
+                {
+                  backgroundColor: "gray",
+                },
+              ]}
+            >
+              <Entypo
+                name="arrow-long-right"
+                style={{ marginRight: 15 }}
+                size={20}
+                color="#fff"
+              />
+              <Text
+                style={{
+                  color: "#fff",
+                  fontWeight: "700",
+                  textTransform: "uppercase",
+                }}
+              >
+                Submit
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={eamilOtpSubmit}
+              style={[registration.button]}
+            >
+              <Entypo
+                name="arrow-long-right"
+                style={{ marginRight: 15 }}
+                size={20}
+                color="#fff"
+              />
+              <Text
+                style={{
+                  color: "#fff",
+                  fontWeight: "700",
+                  textTransform: "uppercase",
+                }}
+              >
+                Submit
+              </Text>
+            </TouchableOpacity>
+          )}
         </ScrollView>
       </ImageBackground>
     </View>

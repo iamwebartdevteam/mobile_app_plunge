@@ -38,6 +38,7 @@ const NewTest = ({ navigation }) => {
   const [labName, setLabName] = useState([]);
   const [formData, setFormData] = useState(initialData);
   const [disable, setDisable] = useState(false);
+  const [labnameLoader, setLabnameLoader] = useState(false);
 
   // ? >>>>>>>> INPUT VALIDATION
   const [errorZipCode, setErrorZipCode] = useState("");
@@ -59,7 +60,7 @@ const NewTest = ({ navigation }) => {
         date: moment(date).format("YYYY-MM-DD"),
       };
       console.log("reqObj", reqObj);
-      return false;
+
       const response = await API.send_request(reqObj);
       console.log("response", response);
       if (response.status === 200) {
@@ -90,6 +91,7 @@ const NewTest = ({ navigation }) => {
     try {
       const response = await API.labname_list();
       setLabName(response.data.data);
+      setLabnameLoader(response.data.data);
     } catch (error) {
       console.log("Error", error);
     }
@@ -198,9 +200,17 @@ const NewTest = ({ navigation }) => {
                 }
               >
                 <Picker.Item label="Lab name" value="" />
-                {labName.map((item, index) => (
-                  <Picker.Item key={index} label={item.name} value={item.id} />
-                ))}
+                {labnameLoader === false ? (
+                  <Picker.Item label="Please wait ..." value="" />
+                ) : (
+                  labName.map((item, index) => (
+                    <Picker.Item
+                      key={index}
+                      label={item.name}
+                      value={item.id}
+                    />
+                  ))
+                )}
               </Picker>
             </View>
 

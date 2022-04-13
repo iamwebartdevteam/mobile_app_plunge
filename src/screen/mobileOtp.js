@@ -73,9 +73,9 @@ const MobileOtp = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}
         >
           <Text style={registration.heading}>Mobile verification</Text>
-          <Text style={registration.loginPra}>{route.params.message}</Text>
+          {/* <Text style={registration.loginPra}>{route.params.message}</Text> */}
           <View style={loginScreen.userImg}>
-            <View style={loginScreen.icondiv}>
+            <View style={[loginScreen.icondiv, loginScreen.extraIcon]}>
               <MaterialIcons name="mobile-friendly" size={50} color="#BD69EE" />
             </View>
           </View>
@@ -172,9 +172,9 @@ const MobileOtp = ({ navigation, route }) => {
               },
             ]}
           >
-            <Text style={[registration.pragrephContaint]}>
+            {/* <Text style={[registration.pragrephContaint]}>
               Mobile Otp Here : {route.params.otp}
-            </Text>
+            </Text> */}
           </Text>
         </ScrollView>
       </ImageBackground>

@@ -10,10 +10,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { loginScreen, registration } from "../../assets/style";
 import loginBg from "../../assets/loginbg.png";
 import { Button } from "react-native-paper";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Entypo } from "@expo/vector-icons";
 import * as API from "../Api/apiHalper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
+import { showMessage } from "react-native-flash-message";
 const MailOtp = ({ navigation, route }) => {
   //console.log("route", route.params.loginId);
 
@@ -55,22 +56,27 @@ const MailOtp = ({ navigation, route }) => {
           loginId: route.params.loginId,
         });
       }
+      showMessage({
+        message: response.data.message,
+        type: response.status === 200 ? "success" : "danger",
+        animationDuration: 1000,
+      });
     } catch (error) {
       console.log("Error", error);
     }
   };
 
-  // const readData = async () => {
-  //   try {
-  //     const userAge = await AsyncStorage.getItem(STORAGE_KEY);
-  //     //console.log("userAge", userAge);
-  //     if (userAge !== null) {
-  //       console.log("userAge", userAge);
-  //     }
-  //   } catch (e) {
-  //     alert("Failed to fetch the data from storage");
-  //   }
-  // };
+  // ? validation condition
+
+  const validation = !pin1 || !pin2 || !pin3 || !pin4 || !pin5 || !pin6;
+
+  const disabledbtnOtp = () => {
+    showMessage({
+      message: "Please enter your verification code",
+      type: "danger",
+      animationDuration: 1000,
+    });
+  };
 
   useEffect(() => {}, []);
 
@@ -168,19 +174,54 @@ const MailOtp = ({ navigation, route }) => {
               value={pin6}
             />
           </View>
-          <Button
-            style={[
-              registration.button,
-              {
-                paddingVertical: 0,
-              },
-            ]}
-            icon={{ source: "arrow-right", direction: "ltr" }}
-            mode="contained"
-            onPress={eamilOtpSubmit}
-          >
-            verification
-          </Button>
+          {validation ? (
+            <TouchableOpacity
+              onPress={disabledbtnOtp}
+              style={[
+                registration.button,
+                {
+                  backgroundColor: "gray",
+                },
+              ]}
+            >
+              <Entypo
+                name="arrow-long-right"
+                style={{ marginRight: 15 }}
+                size={20}
+                color="#fff"
+              />
+              <Text
+                style={{
+                  color: "#fff",
+                  fontWeight: "700",
+                  textTransform: "uppercase",
+                }}
+              >
+                verification
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={eamilOtpSubmit}
+              style={[registration.button]}
+            >
+              <Entypo
+                name="arrow-long-right"
+                style={{ marginRight: 15 }}
+                size={20}
+                color="#fff"
+              />
+              <Text
+                style={{
+                  color: "#fff",
+                  fontWeight: "700",
+                  textTransform: "uppercase",
+                }}
+              >
+                verification
+              </Text>
+            </TouchableOpacity>
+          )}
 
           <Text style={registration.pragreph}>
             <Text style={registration.pragrephContaint}>

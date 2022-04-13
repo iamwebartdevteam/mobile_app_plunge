@@ -275,6 +275,9 @@ export const dashBoard = StyleSheet.create({
     alignItems: "center",
     width: wp("100%"),
   },
+  scrollback: {
+    height: hp("105%"),
+  },
   userImg: {
     width: 150,
     height: 150,

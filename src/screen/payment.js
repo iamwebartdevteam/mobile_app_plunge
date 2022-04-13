@@ -32,6 +32,16 @@ const Payment = ({ navigation, route }) => {
   const [subsAmount, setSubsAmount] = useState("");
   const [disable, setDisable] = useState(false);
 
+  // ? FORM VALIDATION MESS STATE
+  const [errorRecip, setErrorRecip] = useState("");
+  const [errorLine1, setErrorLine1] = useState("");
+  const [errorLine2, setErrorLine2] = useState("");
+  const [errorCity, setErrorCity] = useState("");
+  const [errorCountry, setErrorCountry] = useState("");
+  const [errorPostal, setErrorPostal] = useState("");
+  const [errorPhone, setErrorPhone] = useState("");
+  const [errorState, setErrorState] = useState("");
+
   const amount = route.params.amount + ".00";
 
   // ?>>>>>>>> INPUT HANDALER =======>>>>>>
@@ -109,15 +119,84 @@ const Payment = ({ navigation, route }) => {
   };
 
   const disabledbtnPayment = () => {
-    showMessage({
-      message: "Please enter your payment details",
-      type: "danger",
-      animationDuration: 1000,
-    });
+    if (!formData.recipient_name) {
+      setErrorRecip(
+        showMessage({
+          message: "Please enter your recipient name",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    } else if (!formData.line1) {
+      setErrorLine1(
+        showMessage({
+          message: "Please enter your line1 name",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    } else if (!formData.line2) {
+      setErrorLine2(
+        showMessage({
+          message: "Please enter your line2 name",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    } else if (!formData.city) {
+      setErrorCity(
+        showMessage({
+          message: "Please enter your city name",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    } else if (!formData.country_code) {
+      setErrorCountry(
+        showMessage({
+          message: "Please enter your country name",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    } else if (!formData.postal_code) {
+      setErrorPostal(
+        showMessage({
+          message: "Please enter your postal code",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    } else if (!formData.phone) {
+      setErrorPhone(
+        showMessage({
+          message: "Please enter your phone number",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    } else if (!formData.state) {
+      setErrorState(
+        showMessage({
+          message: "Please enter your state name",
+          type: "danger",
+          animationDuration: 1000,
+        })
+      );
+    }
+
+    if (formData.recipient_name) {
+    } else {
+      showMessage({
+        message: "Please enter your payment details",
+        type: "danger",
+        animationDuration: 1000,
+      });
+    }
   };
 
   return (
-    <View style={dashBoard.dasboardScreen}>
+    <View style={[dashBoard.dasboardScreen]}>
       <ImageBackground
         source={loginBg}
         resizeMode="cover"
@@ -128,123 +207,129 @@ const Payment = ({ navigation, route }) => {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           >
-            <View style={[dashBoard.dasboardScreen, editProfile.formBgScreen]}>
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Amount"
-                editable={false}
-                value={amount}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Recipient Name"
-                onChangeText={(value) => inputHandaler("recipient_name", value)}
-                value={formData.recipient_name}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Line1"
-                onChangeText={(value) => inputHandaler("line1", value)}
-                value={formData.line1}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Line2"
-                onChangeText={(value) => inputHandaler("line2", value)}
-                value={formData.line2}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="City"
-                onChangeText={(value) => inputHandaler("city", value)}
-                value={formData.city}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Country Name"
-                onChangeText={(value) => inputHandaler("country_code", value)}
-                value={formData.country_code}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Postal Code"
-                onChangeText={(value) => inputHandaler("postal_code", value)}
-                value={formData.postal_code}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="Phone"
-                onChangeText={(value) => inputHandaler("phone", value)}
-                value={formData.phone}
-              />
-              <TextInput
-                style={editProfile.inputFeild}
-                placeholder="State"
-                onChangeText={(value) => inputHandaler("state", value)}
-                value={formData.state}
-              />
-              {btnDisabel ? (
-                <TouchableOpacity
-                  onPress={disabledbtnPayment}
-                  style={[
-                    registration.button,
-                    editProfile.updateBtn,
-                    {
-                      backgroundColor: "gray",
-                    },
-                  ]}
-                >
-                  <Entypo
-                    name="arrow-long-right"
-                    style={{ marginRight: 15 }}
-                    size={20}
-                    color="#fff"
-                  />
-                  <Text style={{ color: "#fff", fontWeight: "700" }}>
-                    Submit
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={[
-                    registration.button,
-                    editProfile.updateBtn,
-                    {
-                      backgroundColor: disable === false ? "#BD69EE" : "gray",
-                    },
-                  ]}
-                  disabled={disable}
-                  onPress={submitButton}
-                >
-                  {disable === false ? (
-                    <>
-                      <Entypo
-                        name="arrow-long-right"
-                        style={{ marginRight: 15 }}
-                        size={20}
-                        color="#fff"
-                      />
-                      <Text
-                        disabled={btnDisabel}
-                        style={{ color: "#fff", fontWeight: "700" }}
-                      >
-                        Submit
-                      </Text>
-                    </>
-                  ) : (
-                    <>
-                      <ActivityIndicator
-                        size="small"
-                        color="#0000ff"
-                        style={{ marginRight: 15 }}
-                      />
-                      <Text style={{ fontWeight: "700", color: "#000" }}>
-                        Loading...
-                      </Text>
-                    </>
-                  )}
-                </TouchableOpacity>
-              )}
+            <View style={dashBoard.scrollback}>
+              <View
+                style={[dashBoard.dasboardScreen, editProfile.formBgScreen]}
+              >
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="Amount"
+                  editable={false}
+                  value={amount}
+                />
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="Recipient Name"
+                  onChangeText={(value) =>
+                    inputHandaler("recipient_name", value)
+                  }
+                  value={formData.recipient_name}
+                />
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="Line1"
+                  onChangeText={(value) => inputHandaler("line1", value)}
+                  value={formData.line1}
+                />
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="Line2"
+                  onChangeText={(value) => inputHandaler("line2", value)}
+                  value={formData.line2}
+                />
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="City"
+                  onChangeText={(value) => inputHandaler("city", value)}
+                  value={formData.city}
+                />
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="Country Name"
+                  onChangeText={(value) => inputHandaler("country_code", value)}
+                  value={formData.country_code}
+                />
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="Postal Code"
+                  onChangeText={(value) => inputHandaler("postal_code", value)}
+                  value={formData.postal_code}
+                />
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="Phone"
+                  onChangeText={(value) => inputHandaler("phone", value)}
+                  value={formData.phone}
+                />
+                <TextInput
+                  style={editProfile.inputFeild}
+                  placeholder="State"
+                  onChangeText={(value) => inputHandaler("state", value)}
+                  value={formData.state}
+                />
+                {btnDisabel ? (
+                  <TouchableOpacity
+                    onPress={disabledbtnPayment}
+                    style={[
+                      registration.button,
+                      editProfile.updateBtn,
+                      {
+                        backgroundColor: "gray",
+                      },
+                    ]}
+                  >
+                    <Entypo
+                      name="arrow-long-right"
+                      style={{ marginRight: 15 }}
+                      size={20}
+                      color="#fff"
+                    />
+                    <Text style={{ color: "#fff", fontWeight: "700" }}>
+                      Submit
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={[
+                      registration.button,
+                      editProfile.updateBtn,
+                      {
+                        backgroundColor: disable === false ? "#BD69EE" : "gray",
+                      },
+                    ]}
+                    disabled={disable}
+                    onPress={submitButton}
+                  >
+                    {disable === false ? (
+                      <>
+                        <Entypo
+                          name="arrow-long-right"
+                          style={{ marginRight: 15 }}
+                          size={20}
+                          color="#fff"
+                        />
+                        <Text
+                          disabled={btnDisabel}
+                          style={{ color: "#fff", fontWeight: "700" }}
+                        >
+                          Submit
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <ActivityIndicator
+                          size="small"
+                          color="#0000ff"
+                          style={{ marginRight: 15 }}
+                        />
+                        <Text style={{ fontWeight: "700", color: "#000" }}>
+                          Loading...
+                        </Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </ScrollView>
         </View>

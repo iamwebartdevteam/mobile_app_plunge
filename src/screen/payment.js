@@ -118,6 +118,7 @@ const Payment = ({ navigation, route }) => {
     }
   };
 
+  // ? DISABLED BTN AND VALIDATION
   const disabledbtnPayment = () => {
     if (!formData.recipient_name) {
       setErrorRecip(
@@ -254,12 +255,14 @@ const Payment = ({ navigation, route }) => {
                   placeholder="Postal Code"
                   onChangeText={(value) => inputHandaler("postal_code", value)}
                   value={formData.postal_code}
+                  keyboardType="number-pad"
                 />
                 <TextInput
                   style={editProfile.inputFeild}
                   placeholder="Phone"
                   onChangeText={(value) => inputHandaler("phone", value)}
                   value={formData.phone}
+                  keyboardType="number-pad"
                 />
                 <TextInput
                   style={editProfile.inputFeild}

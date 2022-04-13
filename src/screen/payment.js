@@ -20,6 +20,7 @@ import { Entypo } from "@expo/vector-icons";
 import { CURRENCY } from "../Api/constant";
 import * as c from "../Api/constant";
 import { io } from "socket.io-client";
+import { showMessage } from "react-native-flash-message";
 
 const socket = io(c.URL);
 const Payment = ({ navigation, route }) => {
@@ -30,6 +31,7 @@ const Payment = ({ navigation, route }) => {
   const [formData, setFormData] = useState([]);
   const [subsAmount, setSubsAmount] = useState("");
   const [disable, setDisable] = useState(false);
+
   const amount = route.params.amount + ".00";
 
   // ?>>>>>>>> INPUT HANDALER =======>>>>>>
@@ -50,6 +52,16 @@ const Payment = ({ navigation, route }) => {
       console.log("Error", error);
     }
   };
+
+  const btnDisabel =
+    !formData.recipient_name ||
+    !formData.line1 ||
+    !formData.line2 ||
+    !formData.city ||
+    !formData.country_code ||
+    !formData.postal_code ||
+    !formData.phone ||
+    !formData.state;
 
   // ? PAYMENT SUBMIT
   const submitButton = async () => {
@@ -80,6 +92,7 @@ const Payment = ({ navigation, route }) => {
         },
       };
       console.log("reqObj", reqObj);
+      return false;
       const response = await API.add_payment(reqObj);
       console.log("response", response);
       if (response.status === 200) {
@@ -93,6 +106,14 @@ const Payment = ({ navigation, route }) => {
     } catch (error) {
       console.log("Error", error);
     }
+  };
+
+  const disabledbtnPayment = () => {
+    showMessage({
+      message: "Please enter your payment details",
+      type: "danger",
+      animationDuration: 1000,
+    });
   };
 
   return (
@@ -162,52 +183,68 @@ const Payment = ({ navigation, route }) => {
                 onChangeText={(value) => inputHandaler("state", value)}
                 value={formData.state}
               />
-              <TouchableOpacity
-                style={[
-                  registration.button,
-                  editProfile.updateBtn,
-                  {
-                    backgroundColor: disable === false ? "#BD69EE" : "gray",
-                  },
-                ]}
-                disabled={disable}
-                onPress={submitButton}
-              >
-                {disable === false ? (
-                  <>
-                    <Entypo
-                      name="arrow-long-right"
-                      style={{ marginRight: 15 }}
-                      size={20}
-                      color="#fff"
-                    />
-                    <Text style={{ color: "#fff", fontWeight: "700" }}>
-                      Submit
-                    </Text>
-                  </>
-                ) : (
-                  <>
-                    <ActivityIndicator
-                      size="small"
-                      color="#0000ff"
-                      style={{ marginRight: 15 }}
-                    />
-                    <Text style={{ fontWeight: "700", color: "#000" }}>
-                      Loading...
-                    </Text>
-                  </>
-                )}
-              </TouchableOpacity>
-
-              {/* <Button
-                style={[registration.button, editProfile.updateBtn]}
-                icon={{ source: "arrow-right", direction: "ltr" }}
-                mode="contained"
-                //disabled={!agree}
-                onPress={submitButton}
-              >
-                SUBMIT
-              </Button> */}
+              {btnDisabel ? (
+                <TouchableOpacity
+                  onPress={disabledbtnPayment}
+                  style={[
+                    registration.button,
+                    editProfile.updateBtn,
+                    {
+                      backgroundColor: "gray",
+                    },
+                  ]}
+                >
+                  <Entypo
+                    name="arrow-long-right"
+                    style={{ marginRight: 15 }}
+                    size={20}
+                    color="#fff"
+                  />
+                  <Text style={{ color: "#fff", fontWeight: "700" }}>
+                    Submit
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={[
+                    registration.button,
+                    editProfile.updateBtn,
+                    {
+                      backgroundColor: disable === false ? "#BD69EE" : "gray",
+                    },
+                  ]}
+                  disabled={disable}
+                  onPress={submitButton}
+                >
+                  {disable === false ? (
+                    <>
+                      <Entypo
+                        name="arrow-long-right"
+                        style={{ marginRight: 15 }}
+                        size={20}
+                        color="#fff"
+                      />
+                      <Text
+                        disabled={btnDisabel}
+                        style={{ color: "#fff", fontWeight: "700" }}
+                      >
+                        Submit
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <ActivityIndicator
+                        size="small"
+                        color="#0000ff"
+                        style={{ marginRight: 15 }}
+                      />
+                      <Text style={{ fontWeight: "700", color: "#000" }}>
+                        Loading...
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
           </ScrollView>
         </View>

@@ -36,6 +36,8 @@ const CommonNav = ({ navigation, route }) => {
   console.log("status", route.params.status);
 
   const getNotification = async () => {
+    await AsyncStorage.setItem(userStatus, JSON.stringify(route.params.status));
+
     const value = await AsyncStorage.getItem(lgoinKey);
     const respons = await API.getuserNotification(value);
     if (respons != "" && respons.data.data != undefined) {
@@ -46,18 +48,18 @@ const CommonNav = ({ navigation, route }) => {
     }
     setNotifications(notifications);
   };
-  const getDataSt = async () => {
-    try {
-      const value = await AsyncStorage.getItem(userStatus);
-      console.log("valuecommmon", value);
-      setUserProfileStatus(JSON.parse(value));
-    } catch (e) {
-      // error reading value
-    }
-  };
+  // const getDataSt = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem(userStatus);
+  //     console.log("valuecommmon", value);
+  //     setUserProfileStatus(JSON.parse(value));
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
 
   useEffect(() => {
-    getDataSt();
+    //getDataSt();
     getNotification();
     const socket = io(c.URL);
     socket.on("receiveEvent", (msg) => {

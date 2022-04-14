@@ -222,3 +222,26 @@ export const user_profile_img = async (data) => {
     return e.response;
   }
 };
+
+// ? user email id  edit
+export const user_email_id = async (data) => {
+  try {
+    const url = c.USER_EMAIL_EDIT + "/" + data.emailId + "/" + data.id;
+    console.log("url", url);
+    const res = await axios.get(url, data);
+    return res;
+  } catch (e) {
+    return e.response;
+  }
+};
+
+// ?USER CHANGES PASSWORD
+export const user_changes_email_Otp = async (data) => {
+  try {
+    const url = c.USER + "/change-email";
+    const res = await axios.patch(url, data);
+    return res;
+  } catch (e) {
+    return e.response;
+  }
+};

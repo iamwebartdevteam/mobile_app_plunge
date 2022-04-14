@@ -56,6 +56,10 @@ const initEditMobile = {
   mobileNo: "",
 };
 
+const editEmailInit = {
+  emailId: "",
+};
+
 const EditProfile = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const pin1ref = useRef(null);
@@ -83,6 +87,8 @@ const EditProfile = ({ navigation }) => {
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [editMobileNo, setEditMobileNo] = useState(initEditMobile);
   const [pinNumber, setPinNumber] = useState("");
+
+  const [editEmailData, setEditEmailData] = useState(editEmailInit);
 
   // ? EDIT EMAIL AND OTP VARIFICATION STATUS MAINTAINS
   const [isEmailSection, setIsEmailSection] = useState(0);
@@ -236,6 +242,55 @@ const EditProfile = ({ navigation }) => {
 
   const validation = !pinNumber || !yourstate || !formData.cityName;
 
+  // ? EDIT OTP VALIDATION CONDITION
+  const editOtpValidation = !pin1 || !pin2 || !pin3 || !pin4 || !pin5 || !pin6;
+
+  // ? EDIT EMAIL ADDDRESS HANDALER
+  const editEmailHandaler = (name, value) => {
+    setEditEmailData({ ...editEmailData, [name]: value });
+  };
+
+  // ? UPDATE EMAIL SUBMIT BUTTON
+  const updateEmailId = async () => {
+    try {
+      const reqObj = {
+        id: await AsyncStorage.getItem(lgoinKey),
+        emailId: editEmailData.emailId,
+      };
+      console.log("reqObj", reqObj);
+      const response = await API.user_email_id(reqObj);
+      console.log("response", response);
+      if (response.status === 200) {
+        setIsEmailSection(1);
+        // showMessage({
+        //   message: response.data.message,
+        //   type: "success",
+        //   animationDuration: 1000,
+        // });
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  // ? EDIT EMAIL OTP VARIFICATION CODE
+  const editEmailOtpSubmit = async () => {
+    const formData = new FormData();
+    formData.append("id", await AsyncStorage.getItem(lgoinKey));
+    formData.append("emailId", editEmailData.emailId);
+    formData.append("otp", pin1 + pin2 + pin3 + pin4 + pin5 + pin6);
+    try {
+      const response = await API.user_changes_email_Otp(formData);
+      console.log("response", response);
+      if (response.status === 200) {
+        user_details_byid();
+        setEmailModalVisible(!emailModalVisible);
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
   useEffect(() => {
     user_details_byid();
   }, []);
@@ -298,11 +353,13 @@ const EditProfile = ({ navigation }) => {
                     value={formData.mobileNo}
                     keyboardType="numeric"
                   />
-                  <View
-                    style={editProfile.editIcon}
-                    onPress={() => setEmailModalVisible(true)}
-                  >
-                    <Feather name="edit" size={15} color="#000" />
+                  <View style={editProfile.editIcon}>
+                    <Pressable
+                      style={[styles.buttonOpen]}
+                      onPress={() => setEmailModalVisible(true)}
+                    >
+                      <Feather name="edit" size={15} color="#000" />
+                    </Pressable>
                   </View>
                   <TextInput
                     style={editProfile.inputFeild}
@@ -343,7 +400,6 @@ const EditProfile = ({ navigation }) => {
                     value={formData.zipCode === null ? undefined : pinNumber}
                     keyboardType="number-pad"
                   />
-
                   <TextInput
                     style={editProfile.inputFeild}
                     placeholder="State Name"
@@ -425,7 +481,14 @@ const EditProfile = ({ navigation }) => {
                                 style={[
                                   registration.button,
                                   editProfile.updateBtn,
+                                  {
+                                    backgroundColor: !editMobileNo.mobileNo
+                                      ? "gray"
+                                      : "#BD69EE",
+                                    paddingVertical: 5,
+                                  },
                                 ]}
+                                disabled={!editMobileNo.mobileNo}
                                 onPress={editMobileNumber}
                               >
                                 Update
@@ -535,8 +598,15 @@ const EditProfile = ({ navigation }) => {
                                 style={[
                                   registration.button,
                                   editProfile.updateBtn,
+                                  {
+                                    backgroundColor: editOtpValidation
+                                      ? "gray"
+                                      : "#BD69EE",
+                                    paddingVertical: 5,
+                                  },
                                 ]}
                                 onPress={mobileNumberOtp}
+                                disabled={editOtpValidation}
                               >
                                 Submit
                               </Button>
@@ -546,8 +616,8 @@ const EditProfile = ({ navigation }) => {
                       </View>
                     </Modal>
                   </View>
-                  {/* MODAL FOR EMAIL UPDATE AND OTP VARIFICATION */}
 
+                  {/* MODAL FOR EMAIL UPDATE AND OTP VARIFICATION */}
                   <View style={[notification.centeredViewBack]}>
                     <Modal
                       animationType="slide"
@@ -572,28 +642,33 @@ const EditProfile = ({ navigation }) => {
                               color="#fd248a"
                             />
                           </Text>
-                          {isMobileSection === 0 ? (
+                          {isEmailSection === 0 ? (
                             <>
                               <Text style={styles.modalText}>
-                                Edit Mobile Number
+                                Edit Email address
                               </Text>
                               <TextInput
                                 style={editProfile.inputFeild}
-                                placeholder="Mobile Number"
+                                placeholder="Email address"
                                 onChangeText={(value) =>
-                                  editMobileHandaler("mobileNo", value)
+                                  editEmailHandaler("emailId", value)
                                 }
-                                value={editMobileNo.mobileNo}
-                                keyboardType="numeric"
-                                maxLength={10}
+                                value={editEmailData.emailId}
                               />
                               <Button
                                 color="#fff"
                                 style={[
                                   registration.button,
                                   editProfile.updateBtn,
+                                  {
+                                    backgroundColor: !editEmailData.emailId
+                                      ? "gray"
+                                      : "#BD69EE",
+                                    paddingVertical: 5,
+                                  },
                                 ]}
-                                onPress={editMobileNumber}
+                                onPress={updateEmailId}
+                                disabled={!editEmailData.emailId}
                               >
                                 Update
                               </Button>
@@ -601,7 +676,7 @@ const EditProfile = ({ navigation }) => {
                           ) : (
                             <>
                               <Text style={styles.modalText}>
-                                Mobile Number verification code
+                                Email verification Code
                               </Text>
                               <View style={[loginScreen.otpFeildSection]}>
                                 <TextInput
@@ -696,14 +771,20 @@ const EditProfile = ({ navigation }) => {
                                   value={pin6}
                                 />
                               </View>
-                              <Text>{mobileOtp}</Text>
                               <Button
                                 color="#fff"
                                 style={[
                                   registration.button,
                                   editProfile.updateBtn,
+                                  {
+                                    backgroundColor: editOtpValidation
+                                      ? "gray"
+                                      : "#BD69EE",
+                                    paddingVertical: 0,
+                                  },
                                 ]}
-                                onPress={mobileNumberOtp}
+                                disabled={editOtpValidation}
+                                onPress={editEmailOtpSubmit}
                               >
                                 Submit
                               </Button>

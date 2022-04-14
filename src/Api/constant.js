@@ -16,3 +16,4 @@ export const ADD_USER_QUESTION = `${URL}/api/userquestions`;
 export const GET_LABLISTNAME = `${URL}/api/laboratories`;
 export const USER_REQUEST = `${URL}/api/requests/users`;
 export const NOTIFICATION = `${URL}/api/notifications`;
+export const USER_EMAIL_EDIT = `${URL}/api/users/change/email`;

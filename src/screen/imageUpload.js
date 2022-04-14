@@ -83,9 +83,9 @@ export default function ImageUpload({ navigation }) {
   const __takePicture = async () => {
     if (!camera) return;
     const photo = await camera.takePictureAsync({ base64: true });
-    // let tfimage = photo.base64;
-    // const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
-    // console.log("photo", dataPhoto);
+    let tfimage = photo.base64;
+    const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
+    console.log("photo", dataPhoto);
     // const file = await urltoFile(dataPhoto, "a.jpeg");
     // console.log("file", file);
     setPreviewVisible(true);

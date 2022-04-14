@@ -29,12 +29,11 @@ import * as API from "../Api/apiHalper";
 import { io } from "socket.io-client";
 import * as c from "../Api/constant";
 
-const CommonNav = ({ navigation }) => {
+const CommonNav = ({ navigation, route }) => {
   const [userProfileStatus, setUserProfileStatus] = useState("");
   const [notifications, setNotifications] = useState([]);
-  console.log("notifications", notifications);
 
-  console.log("userProfileStatusNav", userProfileStatus);
+  console.log("status", route.params.status);
 
   const getNotification = async () => {
     const value = await AsyncStorage.getItem(lgoinKey);
@@ -86,7 +85,7 @@ const CommonNav = ({ navigation }) => {
           },
         }}
       >
-        {userProfileStatus >= "4" ? (
+        {route.params.status >= "4" ? (
           <Drawer.Screen
             name="Dashboard"
             component={Dashboard}
@@ -137,7 +136,7 @@ const CommonNav = ({ navigation }) => {
             ),
           }}
         />
-        {userProfileStatus >= "4" ? undefined : (
+        {route.params.status >= "4" ? undefined : (
           <Drawer.Screen
             name="Additional Info"
             component={Question}

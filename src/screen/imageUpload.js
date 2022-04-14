@@ -26,7 +26,8 @@ export default function ImageUpload({ navigation }) {
   const [capturedImage, setCapturedImage] = useState(null);
   const [startOver, setStartOver] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [baseImg, setBaseImg] = useState("");
+  const [images, setImages] = useState("");
+  console.log("images", images);
 
   const getDataSt = async () => {
     try {
@@ -82,12 +83,25 @@ export default function ImageUpload({ navigation }) {
   // ? TAKE PICTURE
   const __takePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync({ base64: true });
-    let tfimage = photo.base64;
-    const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
-    console.log("photo", dataPhoto);
-    // const file = await urltoFile(dataPhoto, "a.jpeg");
-    // console.log("file", file);
+    const photo = await camera.takePictureAsync();
+    let localUri = photo.uri;
+    let filename = localUri.split("/").pop();
+    console.log("filename", filename);
+    // Infer the type of the image
+    let match = /\.(\w+)$/.exec(filename);
+    // ? images type
+    let type = match ? `image/${match[1]}` : `image`;
+    setImages({
+      name: filename,
+      size: 25524,
+      type: type,
+    });
+    const formdata = new FormData();
+    formdata.append("id", 114);
+    formdata.append("image", images);
+    const response = await API.user_profile_img(formdata);
+    console.log("response", response);
+
     setPreviewVisible(true);
     setCapturedImage(photo);
   };
@@ -95,7 +109,6 @@ export default function ImageUpload({ navigation }) {
   // ? SAVE PHOTO
   const __savePhoto = async () => {
     setStartOver(true);
-
     try {
       // const reqObj = {
       //   image: capturedImage.uri,

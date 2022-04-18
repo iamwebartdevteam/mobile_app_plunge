@@ -17,7 +17,6 @@ import { lgoinKey, userStatus } from "../utility/commonStaticData";
 import { showMessage } from "react-native-flash-message";
 import * as API from "../Api/apiHalper";
 import logo from "../../assets/logo.png";
-import { Buffer } from "buffer";
 
 const tag = "[CAMERA]";
 export default function ImageUpload({ navigation }) {
@@ -61,6 +60,8 @@ export default function ImageUpload({ navigation }) {
     setStartOver(true);
   };
 
+  // ? url to file
+
   const urltoFile = async (url, filename, mimeType) => {
     mimeType = mimeType || (url.match(/^data:([^;]+);/) || "")[1];
     return fetch(url)
@@ -79,15 +80,46 @@ export default function ImageUpload({ navigation }) {
       });
   };
 
+  // ? data url toFile
+  const dataURLtoFile = (dataUrl, fileName) => {
+    var arr = dataUrl.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    return new File([u8arr], fileName, { type: mime });
+  };
+
   // ? TAKE PICTURE
   const __takePicture = async () => {
     if (!camera) return;
     const photo = await camera.takePictureAsync({ base64: true });
-    // let tfimage = photo.base64;
-    // const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
+    let tfimage = photo.base64;
+    const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
+    //console.log("dataPhoto", dataPhoto);
+    var inputURL = dataPhoto;
+    var blobObject = dataURLtoFile(inputURL, "a.jpeg");
+
+    console.log("file", blobObject);
+
+    //blobArray.push();
+    return false;
+    // const file = urltoFile(dataPhoto, "a.jpeg");
+    // console.log("file", file);
+    // return false;
+    // delete file.data.offset;
+    // delete file.data.blobId;
+    // delete file.data.__collector;
+
+    const formData = new FormData();
+    formData.append("image", dataPhoto);
+    formData.append("id", await AsyncStorage.getItem(lgoinKey));
+    const response = await API.user_profile_img(formData);
+    console.log("response", response);
+    return false;
     // console.log("photo", dataPhoto);
     // const file = await urltoFile(dataPhoto, "a.jpeg");
-    // console.log("file", file);
+
     setPreviewVisible(true);
     setCapturedImage(photo);
   };

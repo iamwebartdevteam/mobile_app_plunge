@@ -215,16 +215,8 @@ export const getuserNotification = async (data) => {
 // ? USER PROFILE IMAGES
 export const user_profile_img = async (data) => {
   try {
-    const url = c.USER + "/" + "images";
-    const res = await axios.patch(
-      url,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data", // this is important
-        },
-      },
-      data
-    );
+    const url = c.MOB_IMAGE;
+    const res = await axios.patch(url, data);
     return res;
   } catch (e) {
     return e.response;

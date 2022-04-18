@@ -1,8 +1,8 @@
 export const CURRENCY = "$";
 // BASE URL
 export const PROFILE_URL = "https://checkmate.webarttechnology.co.in";
-export const URL = "https://plunge.webarttechnology.co.in";
-//export const URL = "http://192.168.1.33:2000";
+//export const URL = "https://plunge.webarttechnology.co.in";
+export const URL = "http://192.168.1.182:3001";
 
 export const USER = `${URL}/api/users`;
 export const USER_MOBILE_OTP = `${URL}/api/users/mobile/verification`;
@@ -17,3 +17,4 @@ export const GET_LABLISTNAME = `${URL}/api/laboratories`;
 export const USER_REQUEST = `${URL}/api/requests/users`;
 export const NOTIFICATION = `${URL}/api/notifications`;
 export const USER_EMAIL_EDIT = `${URL}/api/users/change/email`;
+export const MOB_IMAGE = `${URL}/api/mob-users/images`;

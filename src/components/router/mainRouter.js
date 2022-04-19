@@ -26,8 +26,23 @@ import Welcome from "../../screen/welcome";
 import Scanner from "../../screen/scanner";
 const Stack = createNativeStackNavigator();
 
-export default function MainRouter({ login }) {
-  console.log("mainRout", login);
+export default function MainRouter() {
+  //console.log("mainRout");
+  const [isLogin, setIsLogin] = useState("");
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("isLoggedIn");
+      console.log("loginId", value);
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <StatusBar backgroundColor="#9980e9" />

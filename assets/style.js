@@ -1145,4 +1145,8 @@ export const notification = StyleSheet.create({
     alignItems: "flex-end",
     backgroundColor: "rgba(0,0,0, 0.7)",
   },
+  forgotBtn: {
+    color: "#ffff",
+    fontWeight: "700",
+  },
 });

@@ -22,10 +22,12 @@ const tag = "[CAMERA]";
 export default function ImageUpload({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [capturedImage, setCapturedImage] = useState(null);
+  const [capturedImage, setCapturedImage] = useState("");
   const [startOver, setStartOver] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [baseImg, setBaseImg] = useState("");
+
+  console.log("capturedImage", capturedImage);
 
   const getDataSt = async () => {
     try {
@@ -93,49 +95,24 @@ export default function ImageUpload({ navigation }) {
   // ? TAKE PICTURE
   const __takePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync({ base64: true });
+    const photo = await camera.takePictureAsync({ base64: true, quality: 0.3 });
     let tfimage = photo.base64;
-    const dataPhoto = `data:image/jpeg;base64,${tfimage}`;
-    //console.log("dataPhoto", dataPhoto);
-    var inputURL = dataPhoto;
-    var blobObject = dataURLtoFile(inputURL, "a.jpeg");
-
-    console.log("file", blobObject);
-
-    //blobArray.push();
-    return false;
-    // const file = urltoFile(dataPhoto, "a.jpeg");
-    // console.log("file", file);
-    // return false;
-    // delete file.data.offset;
-    // delete file.data.blobId;
-    // delete file.data.__collector;
-
-    const formData = new FormData();
-    formData.append("image", dataPhoto);
-    formData.append("id", await AsyncStorage.getItem(lgoinKey));
-    const response = await API.user_profile_img(formData);
-    console.log("response", response);
-    return false;
-    // console.log("photo", dataPhoto);
-    // const file = await urltoFile(dataPhoto, "a.jpeg");
-
+    const base64Img = `data:image/jpeg;base64,${tfimage}`;
     setPreviewVisible(true);
-    setCapturedImage(photo);
+    setCapturedImage(base64Img);
   };
 
   // ? SAVE PHOTO
   const __savePhoto = async () => {
     setStartOver(true);
-
     try {
-      // const reqObj = {
-      //   image: capturedImage.uri,
-      //   id: await AsyncStorage.getItem(lgoinKey),
-      // };
-      // console.log("reqObj", reqObj);
-      // return false;
-      ///const response = await API.user_profile_img(formData);
+      const reqObj = {
+        id: 114,
+        image: capturedImage,
+      };
+      console.log("reqObj", reqObj);
+      const response = await API.user_profile_img(reqObj);
+      console.log("response", response);
     } catch (error) {
       console.log("error", error);
     }
@@ -161,7 +138,7 @@ export default function ImageUpload({ navigation }) {
         >
           <View style={imageUpload.finalImg}>
             <Image
-              source={{ uri: capturedImage && capturedImage.uri }}
+              source={{ uri: capturedImage && capturedImage }}
               style={
                 capturedImage === null
                   ? dashBoard.nonImg
@@ -207,7 +184,7 @@ export default function ImageUpload({ navigation }) {
                 make sure your Selfie clearly shows your face
               </Text>
               <ImageBackground
-                source={{ uri: capturedImage && capturedImage.uri }}
+                source={{ uri: capturedImage && capturedImage }}
                 style={imageUpload.inprogressImg}
               ></ImageBackground>
               <View

@@ -245,3 +245,14 @@ export const user_changes_email_Otp = async (data) => {
     return e.response;
   }
 };
+
+// ? USER FORGOT PASSWORD
+export const user_forgot_password = async (data) => {
+  try {
+    const url = c.USER + "/forgot-password-request";
+    const res = await axios.patch(url, data);
+    return res;
+  } catch (e) {
+    return e.response;
+  }
+};

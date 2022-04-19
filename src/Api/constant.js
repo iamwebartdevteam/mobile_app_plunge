@@ -17,4 +17,4 @@ export const GET_LABLISTNAME = `${URL}/api/laboratories`;
 export const USER_REQUEST = `${URL}/api/requests/users`;
 export const NOTIFICATION = `${URL}/api/notifications`;
 export const USER_EMAIL_EDIT = `${URL}/api/users/change/email`;
-export const MOB_IMAGE = `${URL}/api/mob-users/images`;
+export const MOB_IMAGE = `${URL}/api/mob-users/mobimages`;

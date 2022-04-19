@@ -64,6 +64,8 @@ export default function ImageUpload({ navigation }) {
   // ? >>>>>>> USER IAMAGES >>>>>>>
   const userImg = c.URL + "/" + userData.image;
 
+  console.log("userImg", userImg);
+
   let camera = Camera;
 
   useEffect(() => {
@@ -132,7 +134,9 @@ export default function ImageUpload({ navigation }) {
             <>
               <View style={imageUpload.finalImg}>
                 <Image
-                  source={{ uri: userImg }}
+                  source={{
+                    uri: userData.image === null ? capturedImage : userImg,
+                  }}
                   style={
                     capturedImage === null
                       ? dashBoard.nonImg

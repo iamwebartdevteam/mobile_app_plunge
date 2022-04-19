@@ -27,8 +27,6 @@ export default function ImageUpload({ navigation }) {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [baseImg, setBaseImg] = useState("");
 
-  console.log("capturedImage", capturedImage);
-
   const getDataSt = async () => {
     try {
       const value = await AsyncStorage.getItem(userStatus);
@@ -62,36 +60,6 @@ export default function ImageUpload({ navigation }) {
     setStartOver(true);
   };
 
-  // ? url to file
-
-  const urltoFile = async (url, filename, mimeType) => {
-    mimeType = mimeType || (url.match(/^data:([^;]+);/) || "")[1];
-    return fetch(url)
-      .then(function (res) {
-        return res.arrayBuffer();
-      })
-      .then(function (buf) {
-        return new File([buf], filename, { type: mimeType });
-      })
-      .catch(function (error) {
-        console.log(
-          "There has been a problem with your fetch operation: " + error
-        );
-        // ADD THIS THROW error
-        throw error;
-      });
-  };
-
-  // ? data url toFile
-  const dataURLtoFile = (dataUrl, fileName) => {
-    var arr = dataUrl.split(","),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    return new File([u8arr], fileName, { type: mime });
-  };
-
   // ? TAKE PICTURE
   const __takePicture = async () => {
     if (!camera) return;
@@ -107,7 +75,7 @@ export default function ImageUpload({ navigation }) {
     setStartOver(true);
     try {
       const reqObj = {
-        id: 114,
+        id: await AsyncStorage.getItem(lgoinKey),
         image: capturedImage,
       };
       console.log("reqObj", reqObj);

@@ -43,10 +43,6 @@ const Dashboard = ({ navigation, data }) => {
 
   // ? USER DETAILS >>>>>>>
   const user_details_byid = async () => {
-    // const profileStatus = await AsyncStorage.getItem(userStatus);
-    // console.log("profileStatus", profileStatus);
-    // const value = await AsyncStorage.getItem(isLogin);
-    // console.log("valuRouter", value);
     try {
       const reqObj = {
         id: await AsyncStorage.getItem(lgoinKey),

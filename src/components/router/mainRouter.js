@@ -24,6 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Payment from "../../screen/payment";
 import Welcome from "../../screen/welcome";
 import Scanner from "../../screen/scanner";
+import UserStatus from "../../screen/userStatus";
 const Stack = createNativeStackNavigator();
 
 export default function MainRouter() {
@@ -158,6 +159,11 @@ export default function MainRouter() {
             options={{ headerShown: false }}
             name="forgot"
             component={Forgotpassword}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="userStatus"
+            component={UserStatus}
           />
         </Stack.Navigator>
       </NavigationContainer>

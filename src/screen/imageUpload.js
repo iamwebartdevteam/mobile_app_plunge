@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import avterImg from "../../assets/userMale.png";
 import { Camera } from "expo-camera";
@@ -17,6 +18,7 @@ import { lgoinKey, userStatus } from "../utility/commonStaticData";
 import { showMessage } from "react-native-flash-message";
 import * as API from "../Api/apiHalper";
 import logo from "../../assets/logo.png";
+import * as c from "../Api/constant";
 
 const tag = "[CAMERA]";
 export default function ImageUpload({ navigation }) {
@@ -25,25 +27,42 @@ export default function ImageUpload({ navigation }) {
   const [capturedImage, setCapturedImage] = useState("");
   const [startOver, setStartOver] = useState(true);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [baseImg, setBaseImg] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [userData, setuserData] = useState([]);
+  //console.log("userData", userData.image);
+  // const getDataSt = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem(userStatus);
+  //     console.log("value", value);
+  //     if (JSON.parse(value) === "0") {
+  //       navigation.navigate("editprofile");
+  //       showMessage({
+  //         message: "Please update your profile details",
+  //         type: "danger",
+  //         animationDuration: 1000,
+  //       });
+  //     }
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
 
-  const getDataSt = async () => {
+  // ? USER DETAILS >>>>>>>
+  const user_details_byid = async () => {
     try {
-      const value = await AsyncStorage.getItem(userStatus);
-      console.log("value", value);
-      // if (JSON.parse(value) === "0") {
-      //   navigation.navigate("editprofile");
-      //   showMessage({
-      //     message: "Please update your profile details",
-      //     type: "danger",
-      //     animationDuration: 1000,
-      //   });
-      // }
-    } catch (e) {
-      // error reading value
+      const reqObj = {
+        id: await AsyncStorage.getItem(lgoinKey),
+      };
+      const response = await API.user_data_id(reqObj);
+      setuserData(response.data.data);
+      setLoader(response.data.data);
+    } catch (error) {
+      console.log("error", error);
     }
   };
-  //console.log("statusIMg", JSON.parse(userProfileStatus));
+
+  // ? >>>>>>> USER IAMAGES >>>>>>>
+  const userImg = c.URL + "/" + userData.image;
 
   let camera = Camera;
 
@@ -52,7 +71,8 @@ export default function ImageUpload({ navigation }) {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     })();
-    getDataSt();
+
+    user_details_byid();
   }, []);
 
   // ? CLOSE CAMERA
@@ -87,7 +107,7 @@ export default function ImageUpload({ navigation }) {
   };
 
   useEffect(() => {
-    getDataSt();
+    //getDataSt();
   }, []);
 
   return (
@@ -104,40 +124,48 @@ export default function ImageUpload({ navigation }) {
             alignItems: "center",
           }}
         >
-          <View style={imageUpload.finalImg}>
-            <Image
-              source={{ uri: capturedImage && capturedImage }}
-              style={
-                capturedImage === null
-                  ? dashBoard.nonImg
-                  : dashBoard.imagesSelfi
-              }
-            />
-          </View>
-          <TouchableOpacity
-            onPress={() => setStartOver(false)}
-            style={{
-              borderRadius: 4,
-              backgroundColor: "#14274e",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingHorizontal: 25,
-              paddingVertical: 10,
-            }}
-          >
-            <Text
-              style={{
-                color: "#fff",
-                fontWeight: "bold",
-                textAlign: "center",
-                fontSize: 25,
-                textTransform: "capitalize",
-              }}
-            >
-              take selfie
+          {loader === false ? (
+            <Text style={{ marginBottom: 20 }}>
+              <ActivityIndicator size="large" color="red" />
             </Text>
-          </TouchableOpacity>
+          ) : (
+            <>
+              <View style={imageUpload.finalImg}>
+                <Image
+                  source={{ uri: userImg }}
+                  style={
+                    capturedImage === null
+                      ? dashBoard.nonImg
+                      : dashBoard.imagesSelfi
+                  }
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() => setStartOver(false)}
+                style={{
+                  borderRadius: 4,
+                  backgroundColor: "#14274e",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingHorizontal: 25,
+                  paddingVertical: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    fontSize: 25,
+                    textTransform: "capitalize",
+                  }}
+                >
+                  take selfie
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       ) : (
         <View

@@ -1149,4 +1149,19 @@ export const notification = StyleSheet.create({
     color: "#ffff",
     fontWeight: "700",
   },
+  userStatubg: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  pragaphText: {
+    fontSize: 20,
+    color: "red",
+    fontWeight: "700",
+  },
+  userStatusImg: {
+    width: wp("80%"),
+    height: hp("50%"),
+  },
 });

@@ -52,6 +52,7 @@ const MobileOtp = ({ navigation, route }) => {
       if (response.status === 200) {
         navigation.navigate("commonNav", {
           loginId: route.params.loginId,
+          status: response.data.data.status,
         });
       }
     } catch (error) {

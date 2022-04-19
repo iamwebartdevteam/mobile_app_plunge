@@ -23,22 +23,22 @@ const Subscriptions = ({ navigation }) => {
   const [subscribeId, setSubscribeId] = useState([]);
 
   // ? USER STATUS CONFIGARATION
-  const getDataSt = async () => {
-    try {
-      const value = await AsyncStorage.getItem(userStatus);
-      console.log("svalue", value);
-      if (JSON.parse(value) === "0" || JSON.parse(value) === "1") {
-        navigation.navigate("imageUpload");
-        showMessage({
-          message: "Please update your profile details",
-          type: "danger",
-          animationDuration: 1000,
-        });
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
+  // const getDataSt = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem(userStatus);
+  //     console.log("svalue", value);
+  //     if (JSON.parse(value) === "0" || JSON.parse(value) === "1") {
+  //       navigation.navigate("imageUpload");
+  //       showMessage({
+  //         message: "Please update your profile details",
+  //         type: "danger",
+  //         animationDuration: 1000,
+  //       });
+  //     }
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
 
   // ? USER SUBSCRIPTION PALN SHOW
   const subscription_plan = async () => {
@@ -74,7 +74,7 @@ const Subscriptions = ({ navigation }) => {
 
   useEffect(() => {
     subscription_plan();
-    getDataSt();
+    //getDataSt();
     get_user_payment_details();
   }, []);
 

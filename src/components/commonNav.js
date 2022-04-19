@@ -28,12 +28,14 @@ import Notification from "../screen/notification";
 import * as API from "../Api/apiHalper";
 import { io } from "socket.io-client";
 import * as c from "../Api/constant";
+import UserStatus from "../screen/userStatus";
 
 const CommonNav = ({ navigation, route }) => {
   const [userProfileStatus, setUserProfileStatus] = useState("");
   const [notifications, setNotifications] = useState([]);
-
+  const status = route.params.status;
   console.log("status", route.params.status);
+  console.log("userStatus", route.params.status);
 
   const getNotification = async () => {
     await AsyncStorage.setItem(userStatus, JSON.stringify(route.params.status));
@@ -103,7 +105,6 @@ const CommonNav = ({ navigation, route }) => {
 
         <Drawer.Screen
           name="Edit Profile"
-          //component={() => <EditProfile data={route.params.loginId} />}
           component={EditProfile}
           options={{
             drawerIcon: () => (
@@ -126,10 +127,13 @@ const CommonNav = ({ navigation, route }) => {
             ),
           }}
         />
-
         <Drawer.Screen
           name="Subscriptions"
-          component={Subscriptions}
+          component={
+            route.params.status === "0" || route.params.status === "1"
+              ? UserStatus
+              : Subscriptions
+          }
           options={{
             drawerIcon: () => (
               <Text style={dashBoard.menuIcon}>
@@ -141,7 +145,11 @@ const CommonNav = ({ navigation, route }) => {
         {route.params.status >= "4" ? undefined : (
           <Drawer.Screen
             name="Additional Info"
-            component={Question}
+            component={
+              route.params.status === "0" || route.params.status === "1"
+                ? UserStatus
+                : Question
+            }
             options={{
               drawerIcon: () => (
                 <Text style={dashBoard.menuIcon}>
@@ -155,7 +163,7 @@ const CommonNav = ({ navigation, route }) => {
             }}
           />
         )}
-        <Drawer.Screen
+        {/* <Drawer.Screen
           name="STI Test History"
           component={Testhistory}
           options={{
@@ -176,9 +184,9 @@ const CommonNav = ({ navigation, route }) => {
               </Text>
             ),
           }}
-        />
+        /> */}
 
-        {/* {userProfileStatus >= "4" ? (
+        {route.params.status >= "4" ? (
           <>
             <Drawer.Screen
               name="STI Test History"
@@ -207,7 +215,7 @@ const CommonNav = ({ navigation, route }) => {
               }}
             />
           </>
-        ) : undefined} */}
+        ) : undefined}
         <Drawer.Screen
           name="Notification"
           component={() => <Notification data={notifications} />}

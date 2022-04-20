@@ -22,6 +22,7 @@ const Testhistory = ({ navigation }) => {
   const [requestList, setRequestList] = useState([]);
   const [finalStatus, setFinalStatus] = useState("Negative");
   const [loader, setLoader] = useState(false);
+  console.log("requestList", requestList);
   const handalNaviget = (screenName) => {
     navigation.navigate(screenName);
   };

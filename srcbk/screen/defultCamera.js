@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,63 +7,20 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
-  ActivityIndicator,
-  ScrollView,
 } from "react-native";
 import avterImg from "../../assets/userMale.png";
 import { Camera } from "expo-camera";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { dashBoard, imageUpload } from "../../assets/style";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { lgoinKey, userStatus } from "../utility/commonStaticData";
-import { showMessage } from "react-native-flash-message";
-import * as API from "../Api/apiHalper";
-import logo from "../../assets/logo.png";
-import * as c from "../Api/constant";
-
+// import * as FaceDetector from "expo-face-detector";
 const tag = "[CAMERA]";
-export default function ImageUpload({ navigation }) {
+export default function DefultCamera() {
   const [hasPermission, setHasPermission] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [capturedImage, setCapturedImage] = useState("");
+  const [capturedImage, setCapturedImage] = useState(null);
   const [startOver, setStartOver] = useState(true);
+
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [loader, setLoader] = useState(false);
-  const [userData, setuserData] = useState([]);
-
-  // const getDataSt = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem(userStatus);
-  //     console.log("value", value);
-  //     if (JSON.parse(value) === "0") {
-  //       navigation.navigate("editprofile");
-  //       showMessage({
-  //         message: "Please update your profile details",
-  //         type: "danger",
-  //         animationDuration: 1000,
-  //       });
-  //     }
-  //   } catch (e) {
-  //     // error reading value
-  //   }
-  // };
-
-  // ? USER DETAILS >>>>>>>
-  const user_details_byid = async () => {
-    try {
-      const reqObj = {
-        id: await AsyncStorage.getItem(lgoinKey),
-      };
-      const response = await API.user_data_id(reqObj);
-      setuserData(response.data.data);
-      setLoader(response.data.data);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  // ? >>>>>>> USER IAMAGES >>>>>>>
-  const userImg = c.URL + "/" + userData.image;
 
   let camera = Camera;
 
@@ -72,55 +29,25 @@ export default function ImageUpload({ navigation }) {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     })();
-
-    user_details_byid();
   }, []);
 
-  // ? CLOSE CAMERA
   const __closeCamera = () => {
     setStartOver(true);
   };
-
-  // ? TAKE PICTURE
   const __takePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync({ base64: true, quality: 0.3 });
-    let tfimage = photo.base64;
-    const base64Img = `data:image/jpeg;base64,${tfimage}`;
+    const photo = await camera.takePictureAsync();
+    console.log(photo);
     setPreviewVisible(true);
-    setCapturedImage(base64Img);
+    setCapturedImage(photo);
   };
-
-  // ? SAVE PHOTO
   const __savePhoto = async () => {
     setStartOver(true);
-    try {
-      const reqObj = {
-        id: await AsyncStorage.getItem(lgoinKey),
-        image: capturedImage,
-        status:
-          (await AsyncStorage.getItem(userStatus)) > "2"
-            ? await AsyncStorage.getItem(userStatus)
-            : "2",
-      };
-      console.log("reqObj", reqObj);
-      const response = await API.user_profile_img(reqObj);
-      console.log("response", response);
-      if (response.status === 200) {
-        (await AsyncStorage.getItem(userStatus)) > "2"
-          ? await AsyncStorage.getItem(userStatus)
-          : "2";
-        user_details_byid();
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
   };
 
-  useEffect(() => {
-    //getDataSt();
-  }, []);
-
+  const handleFacesDetected = ({ faces }) => {
+    console.log(faces);
+  };
   return (
     <View
       style={{
@@ -135,93 +62,40 @@ export default function ImageUpload({ navigation }) {
             alignItems: "center",
           }}
         >
-          {loader === false ? (
-            <Text style={{ marginBottom: 20 }}>
-              <ActivityIndicator size="large" color="red" />
+          <View style={imageUpload.finalImg}>
+            <Image
+              source={{ uri: capturedImage && capturedImage.uri }}
+              style={
+                capturedImage === null
+                  ? dashBoard.nonImg
+                  : dashBoard.imagesSelfi
+              }
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => setStartOver(false)}
+            style={{
+              borderRadius: 4,
+              backgroundColor: "#14274e",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 25,
+              paddingVertical: 10,
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontWeight: "bold",
+                textAlign: "center",
+                fontSize: 25,
+                textTransform: "capitalize",
+              }}
+            >
+              take selfie
             </Text>
-          ) : (
-            <>
-              {capturedImage === "" ? (
-                <>
-                  <View style={imageUpload.finalImg}>
-                    <Image
-                      source={{
-                        uri: userImg,
-                      }}
-                      style={
-                        capturedImage === null
-                          ? dashBoard.nonImg
-                          : dashBoard.imagesSelfi
-                      }
-                    />
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => setStartOver(false)}
-                    style={{
-                      borderRadius: 4,
-                      backgroundColor: "#14274e",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      paddingHorizontal: 25,
-                      paddingVertical: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "#fff",
-                        fontWeight: "bold",
-                        textAlign: "center",
-                        fontSize: 25,
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      take selfie
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              ) : (
-                <>
-                  <View style={imageUpload.finalImg}>
-                    <Image
-                      source={{
-                        uri: capturedImage,
-                      }}
-                      style={
-                        capturedImage === null
-                          ? dashBoard.nonImg
-                          : dashBoard.imagesSelfi
-                      }
-                    />
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => setStartOver(false)}
-                    style={{
-                      borderRadius: 4,
-                      backgroundColor: "#14274e",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      paddingHorizontal: 25,
-                      paddingVertical: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "#fff",
-                        fontWeight: "bold",
-                        textAlign: "center",
-                        fontSize: 25,
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      take selfie
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </>
-          )}
+          </TouchableOpacity>
         </View>
       ) : (
         <View
@@ -236,7 +110,7 @@ export default function ImageUpload({ navigation }) {
                 make sure your Selfie clearly shows your face
               </Text>
               <ImageBackground
-                source={{ uri: capturedImage && capturedImage }}
+                source={{ uri: capturedImage && capturedImage.uri }}
                 style={imageUpload.inprogressImg}
               ></ImageBackground>
               <View

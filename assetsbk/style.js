@@ -1154,7 +1154,6 @@ export const notification = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-    width: wp("100%"),
   },
   pragaphText: {
     fontSize: 20,
@@ -1162,7 +1161,7 @@ export const notification = StyleSheet.create({
     fontWeight: "700",
   },
   userStatusImg: {
-    width: wp("90%"),
-    height: hp("60%"),
+    width: wp("80%"),
+    height: hp("50%"),
   },
 });

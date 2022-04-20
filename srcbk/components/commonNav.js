@@ -35,13 +35,11 @@ const CommonNav = ({ navigation, route }) => {
   const [notifications, setNotifications] = useState([]);
   const status = route.params.status;
   console.log("status", route.params.status);
-  console.log("userStatus", userProfileStatus);
+  console.log("userStatus", route.params.status);
 
   const getNotification = async () => {
     await AsyncStorage.setItem(userStatus, JSON.stringify(route.params.status));
-    const svalue = await AsyncStorage.getItem(userStatus);
-    console.log("valuecommmon", svalue);
-    setUserProfileStatus(JSON.parse(svalue));
+
     const value = await AsyncStorage.getItem(lgoinKey);
     const respons = await API.getuserNotification(value);
     if (respons != "" && respons.data.data != undefined) {

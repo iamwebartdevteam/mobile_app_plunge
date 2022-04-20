@@ -7,7 +7,7 @@ const UserStatus = () => {
     <View style={notification.userStatubg}>
       <Image
         source={{
-          uri: "https://cdni.iconscout.com/illustration/premium/thumb/young-man-working-on-laptop-and-sitting-on-bean-bag-showing-concept-of-freelancing-2127309-1791051.png",
+          uri: "https://cdn.dribbble.com/users/790111/screenshots/15027427/media/e8dc8cbbb22e997d0105043f01391153.png?compress=1&resize=400x300&vertical=top",
         }}
         style={notification.userStatusImg}
       />

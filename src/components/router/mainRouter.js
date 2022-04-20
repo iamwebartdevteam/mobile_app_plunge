@@ -130,6 +130,11 @@ export default function MainRouter() {
             name="payment"
             component={Payment}
           />
+          <Stack.Screen
+            options={{ headerTitle: "Question" }}
+            name="question"
+            component={Question}
+          />
           {/* <Stack.Screen
             options={{ headerTitle: "Subscriptions & Payment" }}
             name="subscriptions"
@@ -154,6 +159,11 @@ export default function MainRouter() {
             options={{ headerTitle: "Scanner" }}
             name="Scanner"
             component={Scanner}
+          />
+          <Stack.Screen
+            options={{ headerTitle: "QR Code" }}
+            name="qrcode"
+            component={Qrcode}
           />
           <Stack.Screen
             options={{ headerShown: false }}

@@ -17,7 +17,7 @@ const CustomDrawer = (props) => {
   const [userData, setuserData] = useState([]);
   const [userProfileStatus, setUserProfileStatus] = useState("");
   const [notifications, setNotifications] = useState([]);
-  console.log("customNav", userProfileStatus);
+  //console.log("customNav", userProfileStatus);
   //console.log("notifications", notifications);
   const getNotification = async () => {
     const value = await AsyncStorage.getItem(lgoinKey);
@@ -36,8 +36,8 @@ const CustomDrawer = (props) => {
   // ? USER DETAILS >>>>>>>
   const user_details_byid = async () => {
     try {
-      const value = await AsyncStorage.getItem(userStatus);
-      setUserProfileStatus(value);
+      // const value = await AsyncStorage.getItem(userStatus);
+      // setUserProfileStatus(value);
       const reqObj = {
         id: await AsyncStorage.getItem(lgoinKey),
       };

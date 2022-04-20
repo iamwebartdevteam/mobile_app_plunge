@@ -30,23 +30,28 @@ export default function ImageUpload({ navigation }) {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [loader, setLoader] = useState(false);
   const [userData, setuserData] = useState([]);
+  const [imagLoading, setImagLoading] = useState(false);
 
-  // const getDataSt = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem(userStatus);
-  //     console.log("value", value);
-  //     if (JSON.parse(value) === "0") {
-  //       navigation.navigate("editprofile");
-  //       showMessage({
-  //         message: "Please update your profile details",
-  //         type: "danger",
-  //         animationDuration: 1000,
-  //       });
-  //     }
-  //   } catch (e) {
-  //     // error reading value
-  //   }
-  // };
+  const getDataSt = async () => {
+    try {
+      const value = await AsyncStorage.getItem(userStatus);
+      console.log("value", value);
+      if (JSON.parse(value) === "0") {
+        navigation.navigate("Edit Profile");
+        showMessage({
+          message: "Please update your profile details",
+          type: "danger",
+          animationDuration: 1000,
+        });
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  useEffect(() => {
+    getDataSt();
+  }, []);
 
   // ? USER DETAILS >>>>>>>
   const user_details_byid = async () => {
@@ -105,15 +110,19 @@ export default function ImageUpload({ navigation }) {
       };
       console.log("reqObj", reqObj);
       const response = await API.user_profile_img(reqObj);
+
       console.log("response", response);
       if (response.status === 200) {
         navigation.navigate("Subscriptions");
-        (await AsyncStorage.getItem(userStatus)) > "2"
-          ? await AsyncStorage.setItem(
-              userStatus,
-              await AsyncStorage.getItem(userStatus)
-            )
-          : await AsyncStorage.setItem(userStatus, "2");
+        await AsyncStorage.setItem(userStatus, "2");
+
+        // )(await AsyncStorage.getItem(userStatus))) > "2"
+        //   ? await AsyncStorage.setItem(
+        //       userStatus,
+        //       await AsyncStorage.getItem(userStatus)
+        //     )
+        //   : await AsyncStorage.setItem(userStatus, "2");
+        // navigation.navigate("Subscriptions");
 
         user_details_byid();
       }
@@ -121,10 +130,6 @@ export default function ImageUpload({ navigation }) {
       console.log("error", error);
     }
   };
-
-  useEffect(() => {
-    //getDataSt();
-  }, []);
 
   return (
     <View

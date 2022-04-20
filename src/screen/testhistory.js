@@ -26,6 +26,9 @@ const Testhistory = ({ navigation }) => {
   const handalNaviget = (screenName) => {
     navigation.navigate(screenName);
   };
+  useEffect(() => {
+    requestListTable();
+  }, []);
 
   // ? REQUEST LIST TABLE
   const requestListTable = async () => {
@@ -66,10 +69,6 @@ const Testhistory = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    requestListTable();
-  }, []);
-
   return (
     <View
       style={[
@@ -108,7 +107,7 @@ const Testhistory = ({ navigation }) => {
             </View>
           ) : (
             <>
-              <Animated.FlatList
+              <FlatList
                 vertical
                 //onScroll={Animated.event([{ nativeEvent: { contentOffset } }])}
                 showsVerticalScrollIndicator={false}

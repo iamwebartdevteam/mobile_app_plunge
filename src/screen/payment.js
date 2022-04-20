@@ -112,17 +112,13 @@ const Payment = ({ navigation, route }) => {
       const response = await API.add_payment(reqObj);
       console.log("response", response);
       if (response.status === 200) {
+        await AsyncStorage.setItem(userStatus, "3");
         socket.emit("sendEvent", {
           id: await AsyncStorage.getItem(lgoinKey),
           message: formData.recipient_name + " Purchase one subscription plan!",
           showOn: "admin",
         });
-        (await AsyncStorage.getItem(userStatus)) > "3"
-          ? await AsyncStorage.setItem(
-              userStatus,
-              await AsyncStorage.getItem(userStatus)
-            )
-          : await AsyncStorage.setItem(userStatus, "3");
+
         navigation.navigate("Additional Info");
       }
     } catch (error) {

@@ -134,9 +134,6 @@ const EditProfile = ({ navigation }) => {
   // ? >>>>>> SUBMIT BUTTON EDIT USER ====>>>>>>>
   const submitButton = async () => {
     try {
-      //const proFileStatus = await AsyncStorage.getItem(userStatus);
-      //console.log("proFileStatus", proFileStatus);
-      // return false;
       const reqObj = {
         fname: formData.fname,
         lname: formData.lname,
@@ -165,7 +162,7 @@ const EditProfile = ({ navigation }) => {
           type: "success",
           animationDuration: 1000,
         });
-        navigation.navigate("imageUpload");
+        navigation.navigate("Selfie");
         (await AsyncStorage.getItem(userStatus)) > "1"
           ? await AsyncStorage.setItem(
               userStatus,

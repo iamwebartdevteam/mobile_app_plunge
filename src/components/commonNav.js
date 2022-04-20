@@ -31,17 +31,37 @@ import * as c from "../Api/constant";
 import UserStatus from "../screen/userStatus";
 
 const CommonNav = ({ navigation, route }) => {
+  useEffect(() => {
+    user_details_byid();
+  }, []);
+
   const [userProfileStatus, setUserProfileStatus] = useState("");
   const [notifications, setNotifications] = useState([]);
+  const [userDataStatus, setUserDataStatus] = useState([]);
   const status = route.params.status;
   console.log("status", route.params.status);
-  console.log("userStatus", userProfileStatus);
+  console.log("userStatus", userDataStatus);
+
+  // ?>>>>>>>>>>>> USER DETAILS BY ID >>>>>>>>>>>>>>
+  const user_details_byid = async () => {
+    console.log("hello");
+    try {
+      const reqObj = {
+        id: await AsyncStorage.getItem(lgoinKey),
+      };
+      const response = await API.user_data_id(reqObj);
+      console.log("drawrRessss", response.data.data);
+      setUserDataStatus(response.data.data.status);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   const getNotification = async () => {
     await AsyncStorage.setItem(userStatus, JSON.stringify(route.params.status));
-    const svalue = await AsyncStorage.getItem(userStatus);
-    console.log("valuecommmon", svalue);
-    setUserProfileStatus(JSON.parse(svalue));
+    const useStatus = await AsyncStorage.getItem(userStatus);
+    console.log("useStatus", useStatus);
+    setUserProfileStatus(JSON.parse(await AsyncStorage.getItem(userStatus)));
     const value = await AsyncStorage.getItem(lgoinKey);
     const respons = await API.getuserNotification(value);
     if (respons != "" && respons.data.data != undefined) {
@@ -52,33 +72,23 @@ const CommonNav = ({ navigation, route }) => {
     }
     setNotifications(notifications);
   };
-  // const getDataSt = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem(userStatus);
-  //     console.log("valuecommmon", value);
-  //     setUserProfileStatus(JSON.parse(value));
-  //   } catch (e) {
-  //     // error reading value
-  //   }
-  // };
 
   useEffect(() => {
-    //getDataSt();
     getNotification();
+    user_details_byid();
     const socket = io(c.URL);
     socket.on("receiveEvent", (msg) => {
       notifications.push(msg);
       setNotifications(notifications);
     });
   }, []);
-
+  user_details_byid();
   const Drawer = createDrawerNavigator();
 
   return (
     <>
       <Drawer.Navigator
         drawerContent={(props) => <CustomDrawer {...props} />}
-        d
         screenOptions={{
           drawerActiveBackgroundColor: "#4387ff",
           drawerActiveTintColor: "#fff",
@@ -120,7 +130,6 @@ const CommonNav = ({ navigation, route }) => {
         <Drawer.Screen
           name="Selfie"
           component={ImageUpload}
-          style={notification.disable}
           options={{
             drawerIcon: () => (
               <Text style={dashBoard.menuIcon}>
@@ -131,11 +140,7 @@ const CommonNav = ({ navigation, route }) => {
         />
         <Drawer.Screen
           name="Subscriptions"
-          component={
-            route.params.status === "0" || route.params.status === "1"
-              ? UserStatus
-              : Subscriptions
-          }
+          component={Subscriptions}
           options={{
             drawerIcon: () => (
               <Text style={dashBoard.menuIcon}>
@@ -144,14 +149,10 @@ const CommonNav = ({ navigation, route }) => {
             ),
           }}
         />
-        {route.params.status >= "4" ? undefined : (
+        {userDataStatus >= "4" ? undefined : (
           <Drawer.Screen
             name="Additional Info"
-            component={
-              route.params.status === "0" || route.params.status === "1"
-                ? UserStatus
-                : Question
-            }
+            component={Question}
             options={{
               drawerIcon: () => (
                 <Text style={dashBoard.menuIcon}>
@@ -166,7 +167,7 @@ const CommonNav = ({ navigation, route }) => {
           />
         )}
 
-        {userProfileStatus >= "3" ? (
+        {userDataStatus >= "4" ? (
           <>
             <Drawer.Screen
               name="STI Test History"
@@ -196,6 +197,7 @@ const CommonNav = ({ navigation, route }) => {
             />
           </>
         ) : undefined}
+
         <Drawer.Screen
           name="Notification"
           component={() => <Notification data={notifications} />}

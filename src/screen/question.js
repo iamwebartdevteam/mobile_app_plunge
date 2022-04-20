@@ -13,7 +13,7 @@ import qusImg from "../../assets/question.png";
 import * as API from "../Api/apiHalper";
 import { Button } from "react-native-paper";
 import { Entypo, AntDesign } from "@expo/vector-icons";
-import { userStatus } from "../utility/commonStaticData";
+import { lgoinKey, userStatus } from "../utility/commonStaticData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showMessage } from "react-native-flash-message";
 const initialData = { question: "" };
@@ -35,14 +35,14 @@ const Question = ({ navigation }) => {
     try {
       const value = await AsyncStorage.getItem(userStatus);
       console.log("svalue", value);
-      // if (JSON.parse(value) === "0" || JSON.parse(value) === "1") {
-      //   navigation.navigate("subscriptions");
-      //   showMessage({
-      //     message: "Please update your profile details",
-      //     type: "danger",
-      //     animationDuration: 1000,
-      //   });
-      // }
+      if (JSON.parse(value) === "0" || JSON.parse(value) === "1") {
+        navigation.navigate("Subscriptions");
+        showMessage({
+          message: "Please update your profile details",
+          type: "danger",
+          animationDuration: 1000,
+        });
+      }
       const respons = await API.user_question();
       setUseQuestion(respons.data.data);
       setLoader(respons.data.data);
@@ -88,28 +88,32 @@ const Question = ({ navigation }) => {
 
   // ? SUBMIT QUESTION AND ANSWER
   const submithandelar = async () => {
+    const userId = await AsyncStorage.getItem(lgoinKey);
     try {
       var userquestionsans = [];
       userAnswer.map((answers, index) => {
         let ob = "";
         ob = {
-          userId: 114,
+          userId: userId,
           questionId: answers.id,
           answer: answers.answer,
         };
         userquestionsans = [...userquestionsans, ob];
       });
       userquestionsans = { userquestions: userquestionsans };
+      console.log("userquestionsans", userquestionsans);
+
       const response = await API.add_user_question(userquestionsans);
       console.log("response", response);
       if (response.status === 200) {
-        navigation.navigate("STI Test History");
+        await AsyncStorage.setItem(userStatus, "4");
+        navigation.navigate("testhistory");
         showMessage({
           message: "Your profile has been successfully completed",
           type: "success",
           animationDuration: 2000,
         });
-        await AsyncStorage.setItem(userStatus, "4");
+
         (await AsyncStorage.getItem(userStatus)) === "4"
           ? await AsyncStorage.setItem(
               userStatus,

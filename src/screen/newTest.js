@@ -64,6 +64,12 @@ const NewTest = ({ navigation }) => {
       const response = await API.send_request(reqObj);
       console.log("response", response);
       if (response.status === 200) {
+        navigation.navigate("qrcode");
+        showMessage({
+          message: "Thank You For Notifying Us Of A New STI Test",
+          type: "success",
+          animationDuration: 900,
+        });
         socket.emit("sendEvent", {
           id: await AsyncStorage.getItem(lgoinKey),
           message: "We Have Received Your New STI Test Notification!",
@@ -73,12 +79,6 @@ const NewTest = ({ navigation }) => {
           id: await AsyncStorage.getItem(lgoinKey),
           message: "You received one new test request!",
           showOn: "admin",
-        });
-        navigation.navigate("testhistory");
-        showMessage({
-          message: "Thank You For Notifying Us Of A New STI Test",
-          type: "success",
-          animationDuration: 900,
         });
       }
     } catch (error) {

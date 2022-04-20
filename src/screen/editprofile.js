@@ -95,7 +95,7 @@ const EditProfile = ({ navigation }) => {
   const [isMobileSection, setIsMobileSection] = useState(0);
   const [mobileOtp, setMobileOtp] = useState(0);
 
-  console.log("zipCodedd", pinNumber.zipCode);
+  // console.log("zipCodedd", pinNumber.zipCode);
 
   // ?>>>>>>>>>>>> USER DETAILS BY ID >>>>>>>>>>>>>>
   const user_details_byid = async () => {
@@ -134,7 +134,9 @@ const EditProfile = ({ navigation }) => {
   // ? >>>>>> SUBMIT BUTTON EDIT USER ====>>>>>>>
   const submitButton = async () => {
     try {
-      const proFileStatus = await AsyncStorage.getItem(userStatus);
+      //const proFileStatus = await AsyncStorage.getItem(userStatus);
+      //console.log("proFileStatus", proFileStatus);
+      // return false;
       const reqObj = {
         fname: formData.fname,
         lname: formData.lname,
@@ -148,11 +150,15 @@ const EditProfile = ({ navigation }) => {
         stateName: yourstate,
         cityName: formData.cityName,
         id: await AsyncStorage.getItem(lgoinKey),
-        status: proFileStatus > 1 ? proFileStatus : "1",
+        status:
+          (await AsyncStorage.getItem(userStatus)) > "1"
+            ? await AsyncStorage.getItem(userStatus)
+            : "1",
       };
       console.log("reqObj", reqObj);
 
       const response = await API.user_update(reqObj);
+      console.log("Edit-response", response);
       if (response.status === 200) {
         showMessage({
           message: "Update successfully",
@@ -160,13 +166,18 @@ const EditProfile = ({ navigation }) => {
           animationDuration: 1000,
         });
         navigation.navigate("imageUpload");
+        (await AsyncStorage.getItem(userStatus)) > "1"
+          ? await AsyncStorage.setItem(
+              userStatus,
+              await AsyncStorage.getItem(userStatus)
+            )
+          : await AsyncStorage.setItem(userStatus, "1");
         socket.emit("sendEvent", {
           id: await AsyncStorage.getItem(lgoinKey),
           message: "Your Profile Information Has Changed!",
           showOn: await AsyncStorage.getItem(lgoinKey),
         });
       }
-      console.log("response", response);
     } catch (error) {
       console.log("Error", error);
     }

@@ -76,6 +76,9 @@ const Payment = ({ navigation, route }) => {
   // ? PAYMENT SUBMIT
   const submitButton = async () => {
     setDisable(true);
+    const statusu = await AsyncStorage.getItem(userStatus);
+    console.log("statusu", statusu);
+    //return false;
     try {
       const reqObj = {
         userId: await AsyncStorage.getItem(lgoinKey),
@@ -100,6 +103,10 @@ const Payment = ({ navigation, route }) => {
           phone: formData.phone,
           state: formData.state,
         },
+        status:
+          (await AsyncStorage.getItem(userStatus)) > "3"
+            ? await AsyncStorage.getItem(userStatus)
+            : "3",
       };
       console.log("reqObj", reqObj);
       const response = await API.add_payment(reqObj);
@@ -110,7 +117,13 @@ const Payment = ({ navigation, route }) => {
           message: formData.recipient_name + " Purchase one subscription plan!",
           showOn: "admin",
         });
-        navigation.navigate("Subscriptions");
+        (await AsyncStorage.getItem(userStatus)) > "3"
+          ? await AsyncStorage.setItem(
+              userStatus,
+              await AsyncStorage.getItem(userStatus)
+            )
+          : await AsyncStorage.setItem(userStatus, "3");
+        navigation.navigate("Additional Info");
       }
     } catch (error) {
       console.log("Error", error);

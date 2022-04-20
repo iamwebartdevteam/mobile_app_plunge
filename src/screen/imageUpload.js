@@ -64,7 +64,7 @@ export default function ImageUpload({ navigation }) {
 
   // ? >>>>>>> USER IAMAGES >>>>>>>
   const userImg = c.URL + "/" + userData.image;
-
+  console.log("userImg", userImg);
   let camera = Camera;
 
   useEffect(() => {
@@ -107,9 +107,14 @@ export default function ImageUpload({ navigation }) {
       const response = await API.user_profile_img(reqObj);
       console.log("response", response);
       if (response.status === 200) {
+        navigation.navigate("Subscriptions");
         (await AsyncStorage.getItem(userStatus)) > "2"
-          ? await AsyncStorage.getItem(userStatus)
-          : "2";
+          ? await AsyncStorage.setItem(
+              userStatus,
+              await AsyncStorage.getItem(userStatus)
+            )
+          : await AsyncStorage.setItem(userStatus, "2");
+
         user_details_byid();
       }
     } catch (error) {

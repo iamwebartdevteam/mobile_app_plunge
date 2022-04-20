@@ -103,13 +103,19 @@ const Question = ({ navigation }) => {
       const response = await API.add_user_question(userquestionsans);
       console.log("response", response);
       if (response.status === 200) {
-        // localStorage.setItem("status", "4");
-
-        // localStorage.getItem("status") === "4"
-        //   ? localStorage.setItem("status", localStorage.getItem("status"))
-        //   : localStorage.setItem("status", "4");
-        navigation.navigate("testhistory");
-        // localStorage.setItem("myProfile", history.location.pathname);
+        navigation.navigate("STI Test History");
+        showMessage({
+          message: "Your profile has been successfully completed",
+          type: "success",
+          animationDuration: 2000,
+        });
+        await AsyncStorage.setItem(userStatus, "4");
+        (await AsyncStorage.getItem(userStatus)) === "4"
+          ? await AsyncStorage.setItem(
+              userStatus,
+              await AsyncStorage.getItem(userStatus)
+            )
+          : await AsyncStorage.setItem(userStatus, "4");
       }
     } catch (error) {
       console.log("Error", error);

@@ -92,6 +92,7 @@ export default function ImageUpload({ navigation }) {
     const photo = await camera.takePictureAsync({ base64: true, quality: 0.3 });
     let tfimage = photo.base64;
     const base64Img = `data:image/jpeg;base64,${tfimage}`;
+    await AsyncStorage.setItem("useImg", base64Img);
     setPreviewVisible(true);
     setCapturedImage(base64Img);
   };
@@ -99,6 +100,7 @@ export default function ImageUpload({ navigation }) {
   // ? SAVE PHOTO
   const __savePhoto = async () => {
     setStartOver(true);
+    setImagLoading(true);
     try {
       const reqObj = {
         id: await AsyncStorage.getItem(lgoinKey),
@@ -113,6 +115,7 @@ export default function ImageUpload({ navigation }) {
 
       console.log("response", response);
       if (response.status === 200) {
+        setImagLoading(false);
         navigation.navigate("Subscriptions");
         await AsyncStorage.setItem(userStatus, "2");
 
@@ -192,6 +195,22 @@ export default function ImageUpload({ navigation }) {
                 </>
               ) : (
                 <>
+                  {imagLoading === false ? undefined : (
+                    <View style={{ marginBottom: 20, flexDirection: "row" }}>
+                      <ActivityIndicator size="large" color="red" />
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          textTransform: "capitalize",
+                          fontWeight: "700",
+                          marginLeft: 15,
+                          marginTop: 5,
+                        }}
+                      >
+                        please wait ...
+                      </Text>
+                    </View>
+                  )}
                   <View style={imageUpload.finalImg}>
                     <Image
                       source={{

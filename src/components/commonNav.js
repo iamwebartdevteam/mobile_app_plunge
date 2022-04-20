@@ -34,12 +34,12 @@ const CommonNav = ({ navigation, route }) => {
   useEffect(() => {
     user_details_byid();
   }, []);
-
+  const [loader, setLoader] = useState(false);
   const [userProfileStatus, setUserProfileStatus] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [userDataStatus, setUserDataStatus] = useState([]);
-  const status = route.params.status;
-  console.log("status", route.params.status);
+  //const status = route.params.status;
+
   console.log("userStatus", userDataStatus);
 
   // ?>>>>>>>>>>>> USER DETAILS BY ID >>>>>>>>>>>>>>
@@ -52,6 +52,7 @@ const CommonNav = ({ navigation, route }) => {
       const response = await API.user_data_id(reqObj);
       console.log("drawrRessss", response.data.data);
       setUserDataStatus(response.data.data.status);
+      //setLoader(response.data.data);
     } catch (error) {
       console.log("error", error);
     }
@@ -60,7 +61,8 @@ const CommonNav = ({ navigation, route }) => {
   const getNotification = async () => {
     await AsyncStorage.setItem(userStatus, JSON.stringify(route.params.status));
     const useStatus = await AsyncStorage.getItem(userStatus);
-    console.log("useStatus", useStatus);
+    const userImg = await AsyncStorage.getItem("useImg");
+    console.log("userImg", userImg);
     setUserProfileStatus(JSON.parse(await AsyncStorage.getItem(userStatus)));
     const value = await AsyncStorage.getItem(lgoinKey);
     const respons = await API.getuserNotification(value);
